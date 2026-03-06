@@ -1,0 +1,29 @@
+[
+    {
+        "partner_id": "partner_api",
+        "order_id": "api-2001",
+        "order_status": "CREATED",
+        "order_total": 75.00,
+        "currency": "USD",
+        "order_created_at": "2026-03-04T08:00:00Z",
+        "customer_id": "cust-api-X"
+    },
+    {
+        "partner_id": "partner_api",
+        "order_id": "api-2002",
+        "order_status": "FULFILLED",
+        "order_total": 200.50,
+        "currency": "CAD",
+        "order_created_at": "2026-03-04T08:15:00Z",
+        "customer_id": "cust-api-Y"
+    },
+    {
+        "partner_id": "partner_api",
+        "order_id": "api-2003",
+        "order_status": "REFUNDED",
+        "order_total": 50.00,
+        "currency": "USD",
+        "order_created_at": "2026-03-04T09:00:00Z",
+        "customer_id": null
+    }
+]

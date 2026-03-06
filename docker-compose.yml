@@ -1,0 +1,60 @@
+﻿services:
+  postgres:
+    image: postgres:15.6
+    container_name: pde_postgres_15
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  etl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pde_etl_runner
+    restart: "no"
+    env_file: .env
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+      INGEST_SOURCE: ${INGEST_SOURCE:-csv}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app:rw
+    user: "10001:10001"
+    command: [ "python", "-m", "src.etl_run" ]
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pde_jupyter_lab
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app:rw
+    user: "10001:10001"
+    ports:
+      - "127.0.0.1:8888:8888"
+    command:
+      - sh
+      - -lc
+      - >
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --IdentityProvider.token="$JUPYTER_TOKEN" --ServerApp.password="" --ServerApp.allow_origin="" --ServerApp.allow_remote_access=False
+volumes:
+  postgres_data:

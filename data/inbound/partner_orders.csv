@@ -1,0 +1,5 @@
+partner_id,order_id,order_status,order_total,currency,order_created_at,customer_id
+partner_csv,csv-1001,CREATED,150.00,USD,2026-03-01T10:00:00Z,cust-A
+partner_csv,csv-1002,PAID,45.50,EUR,2026-03-02T11:15:00Z,cust-B
+partner_csv,csv-1003,CANCELLED,0.00,GBP,2026-03-02T12:00:00Z,cust-C
+partner_csv,csv-1004,PAID,99.99,USD,2026-03-03T09:30:00Z,cust-D

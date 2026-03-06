@@ -1,0 +1,26 @@
+﻿[
+  {
+    "txnId": "TXN-30001",
+    "accountId": "ACCT-9001",
+    "amount": 49.95,
+    "currency": "USD",
+    "status": "AUTHORIZED",
+    "txnTs": "2026-03-01T12:34:56Z"
+  },
+  {
+    "txnId": "TXN-30002",
+    "accountId": "ACCT-9002",
+    "amount": 15.00,
+    "currency": "USD",
+    "status": "CAPTURED",
+    "txnTs": "2026-03-01T12:35:56Z"
+  },
+  {
+    "txnId": "TXN-30003",
+    "accountId": "ACCT-9003",
+    "amount": 75.50,
+    "currency": "USD",
+    "status": "DECLINED",
+    "txnTs": "2026-03-01T12:36:56Z"
+  }
+]
