@@ -1,3 +1,5 @@
+![Fraud-Ready Payments ETL](docs/assets/banner.png)
+
 # de-lab-001-pandas-postgres-etl
 
 Container-first, enterprise-style Data Engineering lab:
