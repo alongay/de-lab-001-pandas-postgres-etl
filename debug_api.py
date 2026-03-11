@@ -4,7 +4,7 @@ from src.extract import extract_partner_data
 from src.transform import transform_orders_dataframe
 
 try:
-    os.environ["API_URL"] = "file:///app/data/inbound/partner_orders.json"
+    os.environ["API_URL"] = "file:///app/data/payments/partner_orders.json"
     os.environ["INGEST_SOURCE"] = "api"
 
     df = extract_partner_data()

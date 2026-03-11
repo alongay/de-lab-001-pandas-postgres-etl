@@ -69,10 +69,10 @@ demo-payments: assert-env
 	INGEST_SOURCE=both docker compose run --rm etl
 
 	@echo -e "\n=== 5. Injecting Chaos (Negative Amount) ==="
-	@echo "txn_id,account_id,amount,currency,status,txn_ts" > data/inbound/transactions_daily.csv
-	@echo "TXN-30001,ACCT-9001,49.95,USD,CAPTURED,2026-03-01T12:34:56Z" >> data/inbound/transactions_daily.csv
-	@echo "TXN-30002,ACCT-9002,-75.50,USD,CAPTURED,2026-03-01T12:35:56Z" >> data/inbound/transactions_daily.csv
-	@echo "TXN-30003,ACCT-9003,75.50,USD,DECLINED,2026-03-01T12:36:56Z" >> data/inbound/transactions_daily.csv
+	@echo "txn_id,account_id,amount,currency,status,txn_ts" > data/payments/transactions_daily.csv
+	@echo "TXN-30001,ACCT-9001,49.95,USD,CAPTURED,2026-03-01T12:34:56Z" >> data/payments/transactions_daily.csv
+	@echo "TXN-30002,ACCT-9002,-75.50,USD,CAPTURED,2026-03-01T12:35:56Z" >> data/payments/transactions_daily.csv
+	@echo "TXN-30003,ACCT-9003,75.50,USD,DECLINED,2026-03-01T12:36:56Z" >> data/payments/transactions_daily.csv
 
 	@echo -e "\n=== 6. Expected Failure (Great Expectations catches bad data) ==="
 	INGEST_SOURCE=csv docker compose run --rm etl || true

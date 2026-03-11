@@ -3,12 +3,12 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_DIR="$(dirname "$DIR")"
-INBOUND_DIR="$REPO_DIR/data/inbound"
+PAYMENTS_DIR="$REPO_DIR/data/payments"
 
-mkdir -p "$INBOUND_DIR"
+mkdir -p "$PAYMENTS_DIR"
 
-JSON_PATH="$INBOUND_DIR/transactions.json"
-CSV_PATH="$INBOUND_DIR/transactions_daily.csv"
+JSON_PATH="$PAYMENTS_DIR/transactions.json"
+CSV_PATH="$PAYMENTS_DIR/transactions_daily.csv"
 
 echo "Creating JSON at $JSON_PATH..."
 cat << 'EOF' > "$JSON_PATH"

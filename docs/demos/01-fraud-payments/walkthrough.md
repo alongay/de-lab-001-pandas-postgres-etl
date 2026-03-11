@@ -89,7 +89,7 @@ Expected logs:
 Set:
 
 * `INGEST_SOURCE=api`
-* `API_URL=file:///app/data/inbound/transactions.json` (container path) OR a real https endpoint
+* `API_URL=file:///app/data/payments/transactions.json` (container path) OR a real https endpoint
 
 PowerShell:
 

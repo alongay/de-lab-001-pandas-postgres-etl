@@ -1,14 +1,14 @@
 $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path $MyInvocation.MyCommand.Path
 $repoDir = Split-Path $scriptDir
-$inboundDir = Join-Path $repoDir "data\inbound"
+$paymentsDir = Join-Path $repoDir "data\payments"
 
-if (-not (Test-Path $inboundDir)) {
-    New-Item -ItemType Directory -Force -Path $inboundDir | Out-Null
+if (-not (Test-Path $paymentsDir)) {
+    New-Item -ItemType Directory -Force -Path $paymentsDir | Out-Null
 }
 
-$jsonPath = Join-Path $inboundDir "transactions.json"
-$csvPath = Join-Path $inboundDir "transactions_daily.csv"
+$jsonPath = Join-Path $paymentsDir "transactions.json"
+$csvPath = Join-Path $paymentsDir "transactions_daily.csv"
 
 Write-Host "Creating JSON at $jsonPath..."
 $jsonContent = @"

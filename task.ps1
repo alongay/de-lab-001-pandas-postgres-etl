@@ -87,7 +87,7 @@ TXN-30001,ACCT-9001,49.95,USD,CAPTURED,2026-03-01T12:34:56Z
 TXN-30002,ACCT-9002,-75.50,USD,CAPTURED,2026-03-01T12:35:56Z
 TXN-30003,ACCT-9003,75.50,USD,DECLINED,2026-03-01T12:36:56Z
 "@
-    $chaosCsv | Out-File -FilePath .\data\inbound\transactions_daily.csv -Encoding utf8
+    $chaosCsv | Out-File -FilePath .\data\payments\transactions_daily.csv -Encoding utf8
 
     Write-Host "`n=== 6. Expected Failure (Great Expectations catches bad data) ===" -ForegroundColor Yellow
     $env:INGEST_SOURCE = "csv"

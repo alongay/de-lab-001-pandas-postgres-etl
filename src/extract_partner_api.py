@@ -16,7 +16,7 @@ def extract_partner_api() -> pd.DataFrame:
 
     # Local Mock Handle
     if api_url.startswith("file://") or api_url == "https://example.partner/api/orders":
-        json_path = os.getenv("JSON_PATH", "data/inbound/transactions.json")
+        json_path = os.getenv("JSON_PATH", "data/payments/transactions.json")
         with open(json_path, "r", encoding="utf-8-sig") as f:
             payload = json.load(f)
     else:

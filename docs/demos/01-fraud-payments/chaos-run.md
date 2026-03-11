@@ -17,11 +17,11 @@ This demo teaches an enterprise-grade ingestion pattern:
   - `CSV_PATH`
 
 ## Dataset Locations (inside repo)
-- API mock JSON: `data/inbound/transactions.json`
-- CSV drop: `data/inbound/transactions_daily.csv`
+- API mock JSON: `data/payments/transactions.json`
+- CSV drop: `data/payments/transactions_daily.csv`
 
 Inside containers, repo is mounted at `/app`, so file URLs should use:
-- `API_URL=file:///app/data/inbound/transactions.json`
+- `API_URL=file:///app/data/payments/transactions.json`
 
 ---
 
@@ -140,7 +140,7 @@ Expected:
 
 ## E1) Inject a negative amount into CSV
 
-Edit `data/inbound/transactions_daily.csv` and set one amount to a negative value (e.g., -75.50).
+Edit `data/payments/transactions_daily.csv` and set one amount to a negative value (e.g., -75.50).
 
 Example row:
 
