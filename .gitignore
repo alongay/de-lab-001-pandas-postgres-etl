@@ -1,9 +1,16 @@
-﻿.env
+.env
 __pycache__/
 *.pyc
 .DS_Store
+data/
+checkpoints/
+artifacts/
+.ivy2/
 # Runtime / local artifacts
 logs/
 .pytest_cache/
 .ipynb_checkpoints/
 __pycache__/
+*.parquet
+*.crc
+task_silver_logs.txt

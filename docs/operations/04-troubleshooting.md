@@ -1,77 +1,144 @@
 # Troubleshooting Operations
 
-This document compiles the most frequent errors engineers face when operating the containerized ETL pipeline locally, outlining the specific cause and the recommended fix.
+> [!NOTE]
+> This document compiles frequent errors faced when operating the pipeline, outlining the specific **Root Cause** and **Enterprise Fix**.
 
 ---
 
-## 1. Environment Build Fails: "ModuleNotFoundError: No module named 'src'"
+## 1. Path Resolution: "ModuleNotFoundError: No module named 'src'"
 
-**Symptom:**
-When executing `docker compose run --rm etl pytest`, the Python interpreter fatally crashes claiming it cannot find the `src.extract...` directories.
+> [!CAUTION]
+> **Symptom**: Python interpreter fails to find `src.*` modules during testing.
 
-**The Cause (Why this happens):**
-Python inherently struggles with relative import paths during testing if it doesn't clearly recognize the project root. Pytest assumes the root is exactly where the test file is located, failing to look "up" a directory.
-
-**The Fix:**
-You must configure the test suite's environment correctly so it recognizes `src/` locally. We achieve this by adding `tests/conftest.py` which explicitly modifies Python's native `sys.path` variable to include the direct parent root before any test executes.
+**The Solution**:
+Ensure you are running commands from the project root. We use `PYTHONPATH=/app` inside containers to guarantee that every script can locate the **src** and **tests** directories regardless of execution depth.
 
 ---
 
-## 2. Authentication Block: "Invalid Credentials" in JupyterLab
+## 2. Authentication: "Invalid Credentials" in JupyterLab
 
-**Symptom:**
-Opening Jupyter on `localhost:8888` continually demands a password. The `JUPYTER_TOKEN` you passed into `.env` is universally rejected over the UI.
+> [!WARNING]
+> **Symptom**: Token from `.env` is rejected by the Jupyter UI.
 
-**The Cause (Why this happens):**
-Your token wasn't structurally loaded by Docker during boot. The container might have been spawned directly with a raw CMD block that failed to extrapolate the operating system's `$JUPYTER_TOKEN` variable into string text.
-
-**The Fix:**
-1. Execute `docker exec -it pde_jupyter_lab jupyter server list`.
-2. Inspect the generated output. If the list physically says `token=lsJUPYTER_TOKEN` or a similarly malformed string instead of the value in your `.env` file, the container interpolation failed.
-3. Guarantee that the Docker Compose `command` for the jupyter service explicitly utilizes shell wrapping: `command: ["sh", "-lc", "jupyter lab ..."]`.
-4. If the error persists, completely strip down the old containers using `docker compose down -v` and cleanly boot them via `docker compose up -d`.
-
----
-
-## 3. Configuration Load Block: "`pytest.ini` unexpected line: '\ufeff[pytest]'"
-
-**Symptom:**
-Pytest halts execution immediately: `ERROR: /app/pytest.ini:1: unexpected line: '\ufeff[pytest]'`.
-
-**The Cause (Why this happens):**
-Windows file management! You likely created the `pytest.ini` file using Notepad or a similar Windows raw editor that stealthily injected a "UTF-8 BOM" (Byte Order Mark) invisibly to the start of the file. Pytest expects pure unformatted Unix text and chokes on the hidden UTF-8 signature characters.
-
-**The Fix:**
-Open the file in VS Code or any strict IDE. In the very bottom right-hand corner, change the file encoding type from `UTF-8 with BOM` precisely back to pure `UTF-8` and explicitly save the file.
+**The Fix**:
+1. Execute: `docker exec -it pde_jupyter_lab jupyter server list`
+2. Inspect the output. If the token is malformed, perform a hard reset:
+   ```bash
+   docker compose down -v
+   docker compose up -d
+   ```
 
 ---
 
-## 4. Compose Failures: "Project not found" after renaming folder
+## 3. Configuration: "`pytest.ini` unexpected line: '\ufeff[pytest]'"
 
-**Symptom:**
-You renamed your local folder containing the project on your laptop (e.g. from `de-lab-001` to `de-lab-fraud`). When executing `docker compose ps` nothing appears; the shell falsely claims there are no running containers.
+> [!CAUTION]
+> **Symptom**: Pytest chokes on a hidden Windows **UTF-8 BOM** signature.
 
-**The Cause (Why this happens):**
-Docker Compose intrinsically ties deployment instances to the exact name of the encompassing folder by default. If you rename the underlying folder, Docker Compose believes you are in an entirely new codebase and "loses track" of the previously spun-up background containers.
+**The Fix**:
+Open the file in VS Code and change the encoding from `UTF-8 with BOM` back to **Pure UTF-8**. This ensures Unix-compatibility within the Docker environment.
 
-**The Fix:**
-You must explicitly point docker to shut down your old project identifiers before attempting to boot the new folder.
-```bash
-docker compose -p <old_project_name> down
-docker compose up -d
+---
+
+## 4. Storage: "Used by another process" (Windows)
+
+> [!TIP]
+> **Symptom**: PowerShell blocks moving or deleting files inside the project.
+
+**The Solution**:
+1. Ensure no terminal is `.cd`'d into the target folder.
+2. Shut down Docker containers/volumes.
+3. Use **Resource Monitor (resmon)** to identify and terminate any processes holding file handles.
+---
+
+## 5. Streaming: "Kafka Connectivity Failure"
+
+> [!CAUTION]
+> **Symptom**: Producer or Spark job stalls with `Broker: No nodes available`.
+
+**The Fix**:
+1. Check Kafka health: `docker compose -f docker-compose.streaming.yml logs iot-kafka`.
+2. Ensure the **KRaft Node ID** is 0 and the controller is bound to `iot-kafka:9093`.
+3. If Kafka is unstable, perform a **Volume Cleanse**: `docker compose -f docker-compose.streaming.yml down -v && docker compose -f docker-compose.streaming.yml up -d`.
+
+---
+
+## 6. Spark: "Streaming Query Shutdown"
+
+> [!WARNING]
+> **Symptom**: Spark job dies immediately after starting.
+
+**The Fix**:
+1. Inspect the checkpoint directory: `/app/data/delta/_checkpoints`.
+2. Delete old checkpoints if the schema has changed: `rm -rf data/delta/*/ _checkpoints`.
+3. Verify that the **Spark Master URL** (`spark://iot-spark-master:7077`) is correctly exposed in `docker-compose.streaming.yml`.
+---
+
+## 7. Infrastructure: "failed to resolve image: not found"
+
+> [!CAUTION]
+> **Symptom**: Docker fails to pull `bitnami/*` images (e.g., Spark 3.5.1 or Kafka 3.7.0).
+
+**The Root Cause**: 
+Bitnami recently migrated non-latest tags of the free-tier catalog to a **Legacy Repository**. Standard `bitnami/` references for specific versions are being deprecated.
+
+**The Fix**:
+Update your `image:` tags in `docker-compose.streaming.yml` to use the legacy prefix:
+- `bitnami/kafka:3.7.0` → **`bitnamilegacy/kafka:3.7.0`**
+- `bitnami/spark:3.5.1` → **`bitnamilegacy/spark:3.5.1`**
+
+---
+
+## 8. Network: "Invalid master URL" (Spark Worker)
+
+> [!IMPORTANT]
+> **Symptom**: Spark worker fails to register with `SparkException: Invalid master URL`.
+
+**The Root Cause**:
+Java's `java.net.URI` class (used by Spark/Kafka) strictly follows **RFC 1123**. Hostnames **cannot** contain underscores (`_`). While Docker allows them in service names, the Java runtime rejects them as invalid characters.
+
+**The Fix**:
+Always use hyphens (`-`) for service and container names in the streaming stack:
+- `iot_spark_master` (Illegal) → **`iot-spark-master`** (Compliant)
+
+---
+
+## 9. Environments: "PowerShell ParserError: TerminatorExpectedAtEndOfString"
+
+> [!WARNING]
+> **Symptom**: Orchestration scripts fail to run due to missing string terminators.
+
+**The Root Cause**:
+Windows PowerShell can struggle with **Character Encoding (UTF-8 with BOM)** when scripts contain complex emojis or special characters. This leads to misparsed string boundaries.
+
+**The Fix**:
+1. Save scripts as **Pure UTF-8** (No BOM).
+2. Avoid using complex emojis in `Write-Host` or string constants within critical automation scripts.
+---
+
+## 10. Runtime: "Java gateway process exited before sending its port number"
+
+> [!CAUTION]
+> **Symptom**: PySpark applications crash immediately on startup inside a container.
+
+**The Root Cause**:
+The base Python image (e.g., `python:3.11-slim`) does not include the Java Runtime Environment (JRE). PySpark requires a JVM to communicate between the Python driver and the Spark executors.
+
+**The Fix**:
+Upgrade your **Dockerfile** to install a headless JRE and set the `JAVA_HOME` environment variable. 
+```dockerfile
+RUN apt-get update && apt-get install -y default-jre-headless
 ```
 
 ---
 
-## 5. Storage Blocks: "used by another process" (Windows specific)
+## 11. Metadata: "End of file expected" in `_delta_log/*.json`
 
-**Symptom:**
-When explicitly renaming directories or attempting to delete large folders via PowerShell, Windows blocks execution quoting: `The process cannot access the file because it is being used by another process.`
+> [!NOTE]
+> **Symptom**: VS Code or IDEs show red syntax errors in Delta Lake transaction logs.
 
-**The Cause (Why this happens):**
-A raw script, file explorer UI, or internal IDE indexing engine is fundamentally tracking files inside the directory, locking the overall filesystem operation to prevent corruption.
+**The Root Cause**:
+Delta Lake uses **JSONL (JSON Lines)** to maintain atomic transaction logs. Standard JSON validators expect a single root object, but Delta logs contain multiple objects (one per line).
 
-**The Fix:**
-1. Ensure no terminal is definitively `.cd`'d into the local folder. 
-2. Shut down Docker volumes tied to the directory.
-3. If deeply locked, load `resmon` (Windows Resource Monitor), hit the CPU tab -> Associated Handles -> search for the file identifier to forcibly identify and terminate the tracking process.
+**The Solution**:
+**Ignore the warning.** This is the expected behavior for high-performance ACID logs. Spark and Delta Lake will parse the files correctly regardless of the IDE's validation errors.

@@ -1,4 +1,4 @@
-﻿pandas==2.2.2
+pandas==2.2.2
 sqlalchemy==2.0.32
 psycopg2-binary==2.9.9
 requests==2.32.3
@@ -6,3 +6,6 @@ great-expectations==0.18.21
 python-dotenv==1.0.1
 jupyterlab==4.2.5
 pytest==8.3.2
+pyspark==3.5.1
+delta-spark==3.2.0
+confluent-kafka==2.4.0

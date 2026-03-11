@@ -1,102 +1,98 @@
-# SOP / Runbook: Fraud-Ready Payments ETL
+# SOP / Runbook: Unified Data Engineering Lab
 
-Welcome to the Fraud-Ready Payments ETL pipeline! This runbook is written to onboard you into our container-first environment. Our goal is to run enterprise-grade data engineering patterns directly on your local machine exactly as they run in production.
-
-Below are the step-by-step instructions for getting the environment running, exploring the data, and executing the pipeline.
-
----
-
-## 1. Clone and Initialize the Repository
-**What you are doing:** Downloading the source code to your local machine.
-**Why:** You need the localized pipeline logic, Docker Compose manifests, and Jupyter environments to begin work.
-
-### PowerShell & bash
-```bash
-git clone <REPO_URL>
-cd de-lab-001-pandas-postgres-etl
-```
+> [!NOTE]
+> Welcome to the **Data Engineering ETL Pipeline**! This runbook is written to onboard you into our **container-first** environment. Our goal is to run enterprise-grade data engineering patterns directly on your local machine.
 
 ---
 
-## 2. Secure Configuration (`.env`)
-**What you are doing:** Duplicating the configuration template and assigning real, secure credentials.
-**Why:** Enterprise environments strictly isolate secrets (like database passwords and API keys) from the source code. The `.env` file is heavily `.gitignore`'d to prevent credential leaks.
+## 1. Secure Configuration (`.env`)
+**What:** Duplicating the configuration template and assigning real, secure credentials.
+**Why:** Enterprise environments strictly isolate secrets. The `.env` file is heavily **ignored** to prevent credential leaks.
 
-1. **Copy the template:**
-   - *PowerShell:* `Copy-Item .env.example .env`
-   - *bash:* `cp .env.example .env`
-2. **Edit `.env` and configure your credentials:**
-   - `POSTGRES_USER` & `POSTGRES_PASSWORD` (Your local DB access)
-   - `JUPYTER_TOKEN` (Create a random secure phrase to lock your Jupyter instance)
-   - `INGEST_SOURCE` (Choose `api`, `csv`, or `both`)
+- **Copy the template**:
+  - **PowerShell**: `Copy-Item .env.example .env`
+  - **Bash**: `cp .env.example .env`
+- **Edit `.env` and configure**:
+  - `POSTGRES_USER` & `POSTGRES_PASSWORD`
+  - `JUPYTER_TOKEN` (Create a random secure phrase)
+  - `INGEST_SOURCE` (Select `api`, `csv`, or `both`)
 
 ---
 
-## 3. Build and Start the Infrastructure
-**What you are doing:** Booting up the PostgreSQL database and the JupyterLab server as persistent background services.
-**Why:** The ETL script requires an active database to load data into. JupyterLab acts as your interactive exploration environment.
+## 2. Build and Start Infrastructure
+**What:** Booting up PostgreSQL and JupyterLab as persistent background services.
 
-### PowerShell & bash
+**PowerShell & Bash**:
 ```bash
 docker compose up -d --build
 ```
 
-**Verify Health:**
-Run `docker compose ps`. You should expect to see the `pde_postgres_15` container explicitly marked as `(healthy)` and the `pde_jupyter_lab` marked as `Up`.
+**Verify Health**:
+Run `docker compose ps`. Expect `pde_postgres_15` to be **(healthy)** and `pde_jupyter_lab` to be **Up**.
 
 ---
 
-## 4. Log into JupyterLab (Data Profiling)
-**What you are doing:** Accessing the interactive data exploration UI.
-**Why:** Before writing rigid ETL scripts, Data Engineers use tools like Jupyter to interactively profile raw datasets, discover edge cases, and define validation rules.
+## 3. Data Profiling (Jupyter)
+**What:** Accessing the interactive data exploration UI.
 
-1. Open your browser to: `http://127.0.0.1:8888`
-2. Paste the `JUPYTER_TOKEN` you defined in your `.env` file.
+- Open: `http://127.0.0.1:8888`
+- Enter your **Jupyter Token**.
 
-*Tip: If you forgot your token, run `docker exec -it pde_jupyter_lab jupyter server list` to reveal it.*
+> [!TIP]
+> If you forgot your token, run:
+> `docker exec -it pde_jupyter_lab jupyter server list`
 
 ---
 
-## 5. Run the ETL Pipeline
-**What you are doing:** Executing the modular Python ingestion script.
-**Why:** This spins up a transient (temporary) container, executes the `src/etl_run.py` script, and destroys itself upon completion. This guarantees a perfectly sterile, reproducible execution environment every single time.
+## 4. Run the ETL Pipeline
+**What:** Executing the modular Python ingestion script in a **transient container**.
 
-### PowerShell & bash
+**PowerShell & Bash**:
 ```bash
 docker compose run --rm etl
 ```
 
-**Expected Output:**
-You will see chronological logs confirming the Extraction, strict Great Expectations validations (enforcing numeric ranges and expected transaction statuses), and finally a staged UPSERT replacing the `raw_payments_stg` staging table before merging safely into `raw_payments`. It should end with `ETL pipeline finished successfully` (Exit Code 0).
+**Expected Output**:
+Chronological logs confirming **Extraction** -> **Standardization** -> **Quality Gates** -> **Load**.
+Should end with: `ETL pipeline finished successfully` (**Exit Code 0**).
 
 ---
 
-## 6. Run the CI Unit Tests
-**What you are doing:** Exercising the `pytest` suite within the Docker container.
-**Why:** To ensure changes to the schema or logic haven't broken the pipeline. By running it inside the container, you guarantee exact parity with the GitHub Actions CI pipeline.
+## 5. IoT Operations (Time-Series)
+**What:** Managing high-volume telemetry and physical partitions.
 
-### PowerShell & bash
-```bash
-docker compose run --rm etl pytest
-```
-
-**Expected Output:**
-All tests pass cleanly. (e.g., `9 passed`)
+- **Deduplication**: The IoT pipeline uses a strict `(device_id, reading_ts, metric)` key to prevent double-counting.
+- **Table Partitioning**: Data is automatically routed to child tables (e.g., `raw_sensor_readings_y2026`).
+- **Verifying Partitions**:
+  ```sql
+  SELECT relname FROM pg_stat_user_tables WHERE relname LIKE 'raw_sensor_readings_y%';
+  ```
 
 ---
 
-## 7. Teardown & Clean Up
-**What you are doing:** Shutting down the background Docker services to free up RAM/CPU.
-**Why:** General hygiene. Data inside Postgres is safely persisted to a persistent Docker Volume (`postgres_data`) so you won't lose your ingested rows.
+## 6. Streaming Event Platform
+**What:** Operating the **Kafka-Spark** real-time pipeline.
 
-### PowerShell & bash
+> [!NOTE]
+> **Infrastructure Note**: We use the `bitnamilegacy/` repository for Kafka and Spark to ensure specific version compatibility. Do not revert to `bitnami/` unless migrating to the latest "rolling" tags.
+
+- **Start Infrastructure**: `docker compose -f docker-compose.yml -f docker-compose.streaming.yml up -d iot-kafka iot-spark-master iot-spark-worker`
+- **Launch Jobs & Producer**: `docker compose -f docker-compose.yml -f docker-compose.streaming.yml up -d iot-stream-producer iot-bronze-stream iot-silver-stream`
+- **Data Lake (Medallion)**:
+  - **Bronze**: `/app/data/delta/bronze` (Raw events)
+  - **Silver**: `/app/data/delta/silver` (Cleaned readings)
+  - **Quarantine**: `/app/data/delta/quarantine` (Physical outliers)
+
+---
+
+## 7. Teardown & Maintenance
+**What:** Shutting down services to free up local resources.
+
+**PowerShell & Bash**:
 ```bash
 docker compose down
 ```
 
-### Optional: The "Nuke" Command (Destructive)
-If you wish to completely wipe the Postgres database and start entirely fresh:
-```bash
-docker compose down -v
-```
-*(Warning: This irreversibly deletes the `postgres_data` volume).*
+> [!WARNING]
+> To completely wipe the database and start fresh (destructive):
+> `docker compose down -v`

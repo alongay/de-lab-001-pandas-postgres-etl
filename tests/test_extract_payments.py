@@ -3,8 +3,8 @@ import pandas as pd
 import pytest
 from unittest.mock import patch, mock_open
 
-from src.extract_partner_csv import extract_partner_csv
-from src.extract_partner_api import extract_partner_api
+from src.payments.extract_partner_csv import extract_partner_csv
+from src.payments.extract_partner_api import extract_partner_api
 
 
 @patch.dict(os.environ, {"CSV_PATH": "/fake/path.csv", "PARTNER_CSV_ID": "partner_csv"})

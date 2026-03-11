@@ -1,0 +1,89 @@
+services:
+  iot-kafka:
+    image: bitnamilegacy/kafka:3.7.0
+    container_name: pde-iot-kafka
+    ports:
+      - "127.0.0.1:9092:9092"
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@iot-kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://iot-kafka:9092
+    volumes:
+      - kafka_data:/bitnami/kafka
+
+  iot-spark-master:
+    image: bitnamilegacy/spark:3.5.1
+    container_name: pde-iot-spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:7077:7077"
+
+  iot-spark-worker:
+    image: bitnamilegacy/spark:3.5.1
+    container_name: pde-iot-spark-worker
+    depends_on:
+      iot-spark-master:
+        condition: service_started
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://iot-spark-master:7077
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+    ports:
+      - "127.0.0.1:8081:8081"
+
+  iot-stream-producer:
+    build: .
+    container_name: pde-iot-stream-producer
+    env_file: .env
+    depends_on:
+      iot-kafka:
+        condition: service_started
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./:/app:rw
+    command: ["python", "-m", "scripts.streaming.iot_stream_producer"]
+
+  iot-bronze-stream:
+    build: .
+    container_name: pde-iot-bronze-stream
+    env_file: .env
+    environment:
+      - SPARK_MASTER_URL=spark://iot-spark-master:7077
+      - PYTHONPATH=/app
+    depends_on:
+      iot-kafka:
+        condition: service_started
+      iot-spark-master:
+        condition: service_started
+    volumes:
+      - ./:/app:rw
+    command: ["python", "-m", "src.streaming.iot_bronze_stream"]
+
+  iot-silver-stream:
+    build: .
+    container_name: pde-iot-silver-stream
+    env_file: .env
+    environment:
+      - SPARK_MASTER_URL=spark://iot-spark-master:7077
+      - PYTHONPATH=/app
+    depends_on:
+      iot-kafka:
+        condition: service_started
+      iot-spark-master:
+        condition: service_started
+    volumes:
+      - ./:/app:rw
+    command: ["python", "-m", "src.streaming.iot_silver_stream"]
+
+volumes:
+  kafka_data:

@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
-from src.load_payments import load_dataframe_to_postgres
+from src.payments.load_payments import load_dataframe_to_postgres, LoadResult
 
 
 def test_load_to_sqlite_in_memory():

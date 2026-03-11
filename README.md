@@ -2,124 +2,69 @@
 
 # de-lab-001-pandas-postgres-etl
 
+**Status: ✅ Production Symmetrical / Modular Monolith**
+
 Container-first, enterprise-style Data Engineering lab:
-- Postgres in Docker Compose (localhost-only exposure)
-- ETL as a Python module (`src/`)
-- JupyterLab for exploration (`notebooks/`)
-- Great Expectations quality gate (fail-fast)
-- pytest unit tests (CI-ready)
+- **Core Platform**: PostgreSQL 15 + JupyterLab
+- **Domain Modules**: Isolated ETL and Logic in `src/` (Payments, IoT, Streaming)
+- **Quality Gates**: Great Expectations (Batch) & Spark Quality Gates (Streaming)
+- **Persistence**: PostgreSQL (RDBMS) & Delta Lake (ACID Medallion)
 
 ## 📚 Documentation Hub
 For a complete categorized index of all project materials (Build, SOPs, Architecture, and Demos), visit the **[Documentation Hub](docs/README.md)**.
 
-## Quickstart (The 60-Second Demo)
+## 🏗️ Repository Architecture
+The lab uses a **Symmetrical Modular Monolith** pattern:
 ```
 .
-├─ docker-compose.yml
-├─ Dockerfile
-├─ requirements.txt
-├─ .env.example
-├─ .env                 # gitignored
-├─ pytest.ini
 ├─ src/
-│  ├─ __init__.py
-│  ├─ db.py
-│  ├─ extract.py
-│  ├─ transform.py
-│  ├─ load.py
-│  ├─ quality_ge.py
-│  └─ etl_run.py
-├─ notebooks/
-│  └─ 01_extract_transform_load.ipynb
-├─ tests/
-│  ├─ conftest.py
-│  ├─ test_transform.py
-│  ├─ test_load.py
-│  └─ test_quality_ge.py
-├─ logs/                # gitignored (GE artifacts)
-└─ docs/
-   ├─ 01-sop-runbook.md
-   ├─ 02-architecture.md
-   ├─ 03-quality-and-testing.md
-   ├─ 04-troubleshooting.md
-   └─ 00-cheatsheet.md
+│  ├─ core/             # Shared utilities (db.py)
+│  ├─ payments/         # Demo 1: Fraud-Ready Payments
+│  ├─ iot/              # Demo 2: IoT Batch Telemetry
+│  └─ streaming/        # Demo 3: Enterprise Streaming
+├─ scripts/             # Operational & Data Gen scripts (Modular)
+├─ notebooks/           # Domain-specific exploration (Modular)
+├─ data/                # Persistence layers (Payments, IoT, Delta)
+├─ logs/                # Audit & Quality artifacts
+└─ docs/                # SOPs, Runbooks, and Demos
 ```
 
-## Security defaults (important)
-- Postgres is bound to localhost only: `127.0.0.1:5432`
-- JupyterLab is bound to localhost only: `127.0.0.1:8888`
-- Jupyter requires a token stored in `.env`
-- Containers run as a non-root user (uid/gid `10001`)
-- No secrets are committed; `.env` is excluded by `.gitignore`
+## 🚀 Quickstart (The 6-Step Demo)
 
-## Prerequisites
-- Docker Desktop (Windows/macOS) or Docker Engine (Linux)
-- PowerShell (Windows) or bash (Linux/macOS)
-- Git (optional but recommended)
-
-## Quickstart (PowerShell)
+### 1) Environment Setup
 ```powershell
-# 1) Copy env template and set secrets
-Copy-Item .env.example .env
-notepad .env
-
-# 2) Build and start services (Postgres + Jupyter)
-docker compose up -d --build
-
-# 3) Verify
-docker compose ps
-
-# 4) Run ETL (one-off)
-docker compose run --rm etl
-
-# 5) Run tests
-docker compose run --rm etl pytest
-
-# 6) Open Jupyter
-# Visit: http://127.0.0.1:8888 (use token from .env)
+Copy-Item .env.example .env     # (PowerShell)
+cp .env.example .env            # (bash)
 ```
 
-## Quickstart (bash)
-
-```bash
-# 1) Copy env template and set secrets
-cp .env.example .env
-nano .env
-
-# 2) Build and start services (Postgres + Jupyter)
-docker compose up -d --build
-
-# 3) Verify
-docker compose ps
-
-# 4) Run ETL (one-off)
-docker compose run --rm etl
-
-# 5) Run tests
-docker compose run --rm etl pytest
-
-# 6) Open Jupyter
-# Visit: http://127.0.0.1:8888 (use token from .env)
+### 2) Provision Infrastructure
+```powershell
+.\task.ps1 up                   # Build & start core services
 ```
 
-## Documentation
+### 3) Run a Domain Demo (One-Command)
+Choose a demo project to orchestrate:
+- `.\task.ps1 demo-payments`    # Financial ingestion flow
+- `.\task.ps1 demo-iot`         # Batch time-series flow
+- `.\task.ps1 demo-iot-stream`  # Real-time event flow (Kafka/Spark)
 
-* SOP / Runbook: `docs/01-sop-runbook.md`
-* Architecture: `docs/02-architecture.md`
-* Quality + Testing: `docs/03-quality-and-testing.md`
-* Troubleshooting: `docs/04-troubleshooting.md`
-* One-page cheat sheet: `docs/00-cheatsheet.md`
+### 4) Verify Infrastructure
+```powershell
+.\task.ps1 ps                   # See healthy containers
+```
 
-## One-command operations
-- PowerShell: `.\task.ps1 up | etl | test | down`
-- bash/macOS/Linux: `make up | etl | test | down`
+### 5) Run Unit Tests
+```powershell
+.\task.ps1 test                 # Runs pytest in the ETL env
+```
 
-## Non-goals
+### 6) Interactive Exploration
+- **Jupyter**: Visit `http://127.0.0.1:8888` (Use token from `.env`)
+- **Spark UI**: Visit `http://127.0.0.1:8080` (During streaming)
 
-* Production scheduling (Airflow/Cloud Scheduler) — out of scope for this lab
-* CI pipeline wiring — optional next step
-* Upsert/staging swap load pattern — optional next step
-
-## License
-
-Internal training lab (adjust as needed).
+## 🎤 Interview "Gold" (Senior DE Signals)
+Explain how this lab solves production-level problems:
+1. **Medallion Architecture**: Using Bronze/Silver/Quarantine to ensure data lineage.
+2. **Standardization**: Enforcing strict UTC and standard contract casting across sources.
+3. **Infrastructure as Code**: Using hyphenated service naming for Java/RFC 1123 compliance.
+4. **Resilience**: In-stream quality gates and batch-level Great Expectations gates.

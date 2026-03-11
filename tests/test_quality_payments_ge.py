@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.quality_ge_payments import validate_payments_dataframe
+from src.payments.quality_ge_payments import validate_payments_dataframe
 
 
 def test_quality_gate_passes():

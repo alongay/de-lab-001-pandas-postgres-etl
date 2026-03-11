@@ -17,12 +17,12 @@ import sys
 
 import pandas as pd
 
-from src.db import create_postgres_engine
-from src.extract_partner_api import extract_partner_api
-from src.extract_partner_csv import extract_partner_csv
-from src.load_payments import load_dataframe_to_postgres
-from src.quality_ge_payments import validate_payments_dataframe
-from src.transform_payments import transform_payments_dataframe
+from src.core.db import create_postgres_engine
+from src.payments.extract_partner_api import extract_partner_api
+from src.payments.extract_partner_csv import extract_partner_csv
+from src.payments.load_payments import load_dataframe_to_postgres
+from src.payments.quality_ge_payments import validate_payments_dataframe
+from src.payments.transform_payments import transform_payments_dataframe
 
 
 def configure_logging() -> None:

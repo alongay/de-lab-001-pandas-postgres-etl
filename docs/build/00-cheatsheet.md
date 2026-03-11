@@ -1,6 +1,6 @@
 # Cheat Sheet — de-lab-001-pandas-postgres-etl
 
-## Start / Stop
+## 🏗️ Start / Stop
 ### PowerShell
 ```powershell
 # Why: Compiles the custom Python Dockerfile and starts PostgreSQL/Jupyter in the background.
@@ -13,7 +13,7 @@ docker compose ps
 docker compose down
 ```
 
-### bash
+### Bash
 
 ```bash
 # Why: Compiles the custom Python Dockerfile and starts PostgreSQL/Jupyter in the background.
@@ -26,85 +26,114 @@ docker compose ps
 docker compose down
 ```
 
-## Run ETL
+---
 
-The ETL pipeline evaluates the `INGEST_SOURCE` environment variable to determine which partners to ingest (`api`, `csv`, or `both`).
+## 🚀 Run ETL
 
-### PowerShell
-
-```powershell
-# Run API extraction only
-$env:INGEST_SOURCE="api"; docker compose run --rm etl
-
-# Run CSV extraction only
-$env:INGEST_SOURCE="csv"; docker compose run --rm etl
-
-# Run BOTH sources and consolidate them into the raw staging table
-$env:INGEST_SOURCE="both"; docker compose run --rm etl
-```
-
-### bash
-
-```bash
-# Run API extraction only
-INGEST_SOURCE=api docker compose run --rm etl
-
-# Run CSV extraction only
-INGEST_SOURCE=csv docker compose run --rm etl
-
-# Run BOTH sources and consolidate them into the raw_payments table
-# Why: Using --rm ensures this transient data engineering container destroys itself immediately after loading Postgres, preventing memory leaks or state corruption between runs.
-INGEST_SOURCE=both docker compose run --rm etl
-```
-
-## Run Tests
-
-The pytest suite must be run inside the container to ensure environmental parity with CI. It includes tests for individual extraction modes, staging UPSERT logic, transformations, and the Great Expectations quality gate.
+The ETL pipeline evaluates the `INGEST_SOURCE` environment variable to determine which domain to ingest.
 
 ### PowerShell
 
 ```powershell
+# Run Payments ETL
+$env:INGEST_SOURCE="both"; docker compose run --rm etl python -m src.payments.etl_run_payments
+
+# Run IoT Batch ETL
+docker compose run --rm -e PYTHONPATH=/app etl python -m src.iot.etl_run_iot
+```
+
+### Bash
+
+```bash
+# Run Payments ETL
+INGEST_SOURCE=both docker compose run --rm etl python -m src.payments.etl_run_payments
+
+# Run IoT Batch ETL
+INGEST_SOURCE=both docker compose run --rm -e PYTHONPATH=/app etl python -m src.iot.etl_run_iot
+```
+
+---
+
+## 🧪 Run Tests
+
+### PowerShell
+```powershell
 docker compose run --rm etl pytest
 ```
 
-### bash
-
+### Bash
 ```bash
 docker compose run --rm etl pytest
 ```
 
-## JupyterLab
+---
 
-* URL: `http://127.0.0.1:8888`
-* Token: value of `JUPYTER_TOKEN` in `.env`
+## 🏎️ Enterprise Streaming (Demo 3)
 
-Get the active Jupyter URL/token (use locally; do not paste tokens into chat or git):
-
-### PowerShell / bash
-
-```bash
-docker exec -it pde_jupyter_lab jupyter server list
+### Start Infrastructure
+```powershell
+# Starts Kafka and Spark Cluster
+docker compose -f docker-compose.yml -f docker-compose.streaming.yml up -d iot-kafka iot-spark-master iot-spark-worker
 ```
 
-## Logs
+### Launch Producer & Medallion Streams
+```powershell
+# Starts Ingestion and Medallion (Bronze/Silver) jobs
+docker compose -f docker-compose.yml -f docker-compose.streaming.yml up -d iot-stream-producer iot-bronze-stream iot-silver-stream
+```
 
-Tail Jupyter logs:
+### Monitor Streaming Logs
+```powershell
+# Check Producer flow
+docker compose -f docker-compose.streaming.yml logs iot-stream-producer -f
 
+# Check Spark execution
+docker compose -f docker-compose.streaming.yml logs iot-silver-stream -f
+```
+
+---
+
+## 📓 JupyterLab
+
+- **URL**: `http://127.0.0.1:8888`
+- **Token**: Value of `JUPYTER_TOKEN` in `.env`
+
+> [!TIP]
+> Get the active Jupyter URL/token:
+> `docker exec -it pde_jupyter_lab jupyter server list`
+
+---
+
+## 🧹 Clean Rebuild
+
+```bash
+# To start COMPLETELY fresh (destroys the persistent volumes):
+docker compose down -v
+docker compose -f docker-compose.streaming.yml down -v
+docker compose build --no-cache
+```
+
+---
+
+## 📜 Logs
+
+**Tail Jupyter logs**:
 ```bash
 docker logs pde_jupyter_lab --tail 100
 ```
 
-Tail Postgres logs:
-
+**Tail Postgres logs**:
 ```bash
 docker logs pde_postgres_15 --tail 100
 ```
 
-## Clean rebuild (when dependencies change)
+---
+
+## 🧹 Clean Rebuild
 
 ```bash
-# Teaching Note: If you mess up the database schema and want to start COMPLETELY fresh, add `-v` to the down command (e.g., `docker compose down -v`). This destroys the persistent Postgres volume.
-docker compose down
+# To start COMPLETELY fresh (destroys the persistent Postgres volume):
+docker compose down -v
 docker compose build --no-cache
 docker compose up -d
 ```

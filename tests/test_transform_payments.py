@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from decimal import Decimal
 
-from src.transform_payments import transform_payments_dataframe
+from src.payments.transform_payments import transform_payments_dataframe
 
 
 def test_transform_api_schema():
