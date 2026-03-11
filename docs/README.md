@@ -33,6 +33,6 @@ Welcome to the central documentation index for the **Fraud-Ready Payments Data E
 ## 🚀 Hands-on Demos
 *Step-by-step guides for showcasing the platform's features.*
 
-*   [**Main Demo Walkthrough**](demos/07-demo-walkthrough.md) - A scripted presentation guide for a live demo.
-*   [**Chaos Engineering Demo**](demos/09-demo-payments-chaos.md) - Deep dive into "CSV Wins" logic and pipeline failure recovery.
-*   [**Curriculum: Extensions**](demos/08-alternative-demo-projects.md) - Future roadmap for IoT and HR/PII demo exercises.
+*   [**Demos Curriculum Index**](demos/README.md) - The master hub for all demo scenarios.
+*   [**Demo 1: Fraud-Ready Payments**](demos/01-fraud-payments/walkthrough.md) - Ingesting API/CSV financial data with strict gates.
+*   [**Demo 1: Chaos Run**](demos/01-fraud-payments/chaos-run.md) - Simulating failures and archiving quality artifacts.
