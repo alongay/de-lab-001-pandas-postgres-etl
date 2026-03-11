@@ -9,14 +9,10 @@ Container-first, enterprise-style Data Engineering lab:
 - Great Expectations quality gate (fail-fast)
 - pytest unit tests (CI-ready)
 
-## What this lab demonstrates
-- Environment parity: same tooling in dev + CI (container-first)
-- Secure configuration: secrets in `.env` (gitignored), no hardcoded credentials
-- Production-ish pipeline layout: extract/transform/load separated into modules
-- Data quality gating: pipeline fails non-zero when expectations fail
-- Testing posture: unit tests that run without Postgres dependency (SQLite in-memory)
+## 📚 Documentation Hub
+For a complete categorized index of all project materials (Build, SOPs, Architecture, and Demos), visit the **[Documentation Hub](docs/README.md)**.
 
-## Repo layout
+## Quickstart (The 60-Second Demo)
 ```
 .
 ├─ docker-compose.yml
