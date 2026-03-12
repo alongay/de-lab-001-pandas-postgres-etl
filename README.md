@@ -1,77 +1,110 @@
-![Fraud-Ready Payments ETL](docs/assets/banner.png)
+# Enterprise Data Engineering Demo Platform
 
-# de-lab-001-pandas-postgres-etl
+A production-style data engineering portfolio that demonstrates how to build, validate, operate, and observe modern data pipelines across **batch ETL**, **time-series telemetry**, **real-time streaming**, **orchestration**, and **cloud mapping**.
 
-**Status: ✅ Production Symmetrical / Modular Monolith**
+This repository is designed to show how data engineers go beyond moving data from one system to another. It focuses on building pipelines that are:
 
-Container-first, enterprise-style Data Engineering lab:
-- **Core Platform**: PostgreSQL 15 + JupyterLab
-- **Domain Modules**: Isolated ETL and Logic in `src/` (Payments, IoT, Streaming)
-- **Quality Gates**: Great Expectations (Batch) & Spark Quality Gates (Streaming)
-- **Orchestration**: Apache Airflow (Enterprise Task Governance & Monitoring)
-- **Persistence**: PostgreSQL (RDBMS) & Delta Lake (ACID Medallion)
+- **correct** through strict validation and schema enforcement
+- **resilient** through quarantine and failure isolation
+- **replayable** through raw data preservation
+- **observable** through freshness, SLA, and health monitoring
+- **production-shaped** through orchestration, partitioning, and cloud-aligned architecture
 
-## 📚 Documentation Hub
-For a complete categorized index of all project materials (Build, SOPs, Architecture, and Demos), visit the **[Documentation Hub](docs/README.md)**.
-- **Runbook**: [Daily Data Tasks](docs/operations/01-sop-runbook.md)
-- **Admin Guide**: [Platform Maintenance & Governance](docs/operations/02-admin-guide.md) (SOP)
+## What’s inside
 
-## 🏗️ Repository Architecture
-The lab uses a **Symmetrical Modular Monolith** pattern:
-```
+The platform is organized as a connected set of demos that build on one another:
+
+- **Demo 1 — Payments ETL:** batch ingestion, Great Expectations, staging/promote, canonical outputs
+- **Demo 2 — IoT Batch Telemetry:** physical validation, UTC normalization, partitioning, quarantine
+- **Demo 3 — IoT Streaming Platform:** Kafka, Spark Structured Streaming, Delta Bronze/Silver, anomaly routing
+- **Demo 4 — Orchestration & SLA Governance:** Airflow, retries, freshness checks, alerting
+- **Demo 5 — Observability:** validation artifacts, Delta log freshness, quarantine growth monitoring
+- **Demo 6 — OCI Cloud Mapping:** local-to-cloud platform blueprint for Oracle Cloud Infrastructure
+
+## Core technologies
+
+`Python` · `SQL` · `PostgreSQL` · `Great Expectations` · `Kafka` · `Spark Structured Streaming` · `Delta Lake` · `Airflow` · `Docker` · `OCI`
+
+## Why this project matters
+
+This repo is built to answer an important engineering question:
+
+> How do you design data systems that remain trustworthy when data is incomplete, wrong, duplicated, delayed, or physically impossible?
+
+The answer, demonstrated throughout this project, is to combine:
+
+- validation gates
+- quarantine patterns
+- replayable raw layers
+- clean curated outputs
+- orchestration and retries
+- observability and freshness monitoring
+
+## Repository structure
+
+This repository is organized as a **domain-oriented data platform** so each demo remains isolated, testable, and easy to extend while shared platform capabilities stay reusable.
+
+```text
 .
-├─ src/
-│  ├─ core/             # Shared utilities (db.py)
-│  ├─ payments/         # Demo 1: Fraud-Ready Payments
-│  ├─ iot/              # Demo 2: IoT Batch Telemetry
-│  ├─ streaming/        # Demo 3: Enterprise Streaming
-│  ├─ hr/               # Demo 5: HR Compliance & PII
-│  └─ orchestration/     # Demo 4: Platform Symmetrization
-├─ scripts/             # Operational & Data Gen scripts (Modular)
-├─ notebooks/           # Domain-specific exploration (Modular)
-├─ data/                # Persistence layers (Payments, IoT, Delta, HR)
-├─ logs/                # Audit & Quality artifacts
-└─ docs/                # SOPs, Runbooks, and Demos
+├── src/                    # Core application logic and domain ETL modules
+│   ├── core/               # Shared utilities (DB, config, logging, observability hooks)
+│   ├── payments/           # Demo 01: Payments ETL / fraud-style validation
+│   ├── iot/                # Demo 02: Batch IoT telemetry pipeline
+│   ├── hr/                 # Demo 03: HR privacy / compliance pipeline
+│   ├── streaming/          # Demo 04: Kafka + Spark + Delta streaming logic
+│   └── orchestration/      # Demo 05: Airflow orchestration and platform monitoring
+│
+├── docs/                   # Documentation hub
+│   ├── demos/              # Demo walkthroughs, specs, and chaos-run guides
+│   ├── architecture/       # System diagrams and design documents
+│   ├── build/              # Infrastructure, setup, CI/CD, and cloud mapping
+│   ├── operations/         # SOPs, runbooks, troubleshooting, and checklists
+│   └── assets/             # Screenshots, banners, proof-pack visuals
+│
+├── scripts/                # Data generation and operational helper scripts
+│   ├── payments/           # Payment demo generators and helpers
+│   ├── iot/                # Sensor data generators and telemetry helpers
+│   └── ...                 # Symmetrical layout for additional domains
+│
+├── notebooks/              # Domain-specific exploration and validation notebooks
+│   ├── payments/           # Fraud analysis and profiling
+│   ├── streaming/          # Delta Lake audits and streaming validation
+│   └── ...                 # Symmetrical layout for additional domains
+│
+├── data/                   # Isolated persistence layers and demo data
+│   ├── payments/           # Batch landing zones and relational demo storage
+│   ├── streaming/          # Delta Lake tables, checkpoints, and stream artifacts
+│   └── ...                 # Symmetrical layout for additional domains
+│
+├── orchestration/          # Apache Airflow control plane
+│   ├── dags/               # DAGs for orchestration, SLA, and freshness monitoring
+│   └── plugins/            # Custom Airflow operators and helpers
+│
+├── tests/                  # Pytest suite and QA gates
+│   ├── core/               # Shared logic tests
+│   ├── payments/           # Payments domain tests
+│   ├── iot/                # IoT domain tests
+│   └── ...                 # Symmetrical layout for additional domains
+│
+├── task.ps1                # PowerShell task runner
+├── docker-compose.yml      # Core platform services
+├── docker-compose.*.yml    # Domain-specific isolated stacks
+└── README.md               # Showcase entry point
 ```
 
-## 🚀 Quickstart (The 6-Step Demo)
+### Design principles behind the structure
 
-### 1) Environment Setup
-```powershell
-Copy-Item .env.example .env     # (PowerShell)
-cp .env.example .env            # (bash)
-```
+* **Domain isolation:** Each demo has its own logic, scripts, data, and notebooks so changes in one area do not create unnecessary coupling in another.
+* **Shared core utilities:** Common services such as database access, configuration, and observability hooks live in `src/core/` and are reused across domains.
+* **Documentation-first layout:** Architecture, operations, build guidance, and demo walkthroughs are separated so the repo works as both a portfolio and a study resource.
+* **Operational symmetry:** Scripts, notebooks, data, and tests follow the same domain pattern wherever possible, making the repository easier to navigate and scale.
+* **Platform control plane separation:** Airflow orchestration is kept at the platform level because it supervises pipelines rather than behaving like a single domain ETL module.
 
-### 2) Provision Infrastructure
-```powershell
-.\task.ps1 up                   # Build & start core services
-```
+## Best way to read this repo
 
-### 3) Run a Domain Demo (One-Command)
-Choose a demo project to orchestrate:
-- `.\task.ps1 demo-payments`    # Financial ingestion flow
-- `.\task.ps1 demo-iot`         # Batch time-series flow
-- `.\task.ps1 demo-iot-stream`  # Real-time event flow (Kafka/Spark)
-- `.\task.ps1 demo-orchestration` # Enterprise Platform Governance (Airflow)
-- `.\task.ps1 demo-hr`          # Privacy & Compliance flow (PII Redaction)
-
-### 4) Verify Infrastructure
-```powershell
-.\task.ps1 ps                   # See healthy containers
-```
-
-### 5) Run Unit Tests
-```powershell
-.\task.ps1 test                 # Runs pytest in the ETL env
-```
-
-### 6) Interactive Exploration
-- **Jupyter**: Visit `http://127.0.0.1:8888` (Use token from `.env`)
-- **Spark UI**: Visit `http://127.0.0.1:8080` (During streaming)
-
-## 🎤 Interview "Gold" (Senior DE Signals)
-Explain how this lab solves production-level problems:
-1. **Medallion Architecture**: Using Bronze/Silver/Quarantine to ensure data lineage.
-2. **Standardization**: Enforcing strict UTC and standard contract casting across sources.
-3. **Infrastructure as Code**: Using hyphenated service naming for Java/RFC 1123 compliance.
-4. **Resilience**: In-stream quality gates and batch-level Great Expectations gates.
+1. Start with the [architecture overview](file:///docs/architecture/README.md)  
+2. Review the [demo catalog](file:///docs/demos/README.md)  
+3. Run one batch demo  
+4. Run one streaming demo  
+5. Review orchestration and observability docs  
+6. Explore cloud mapping and interview artifacts

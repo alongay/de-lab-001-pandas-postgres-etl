@@ -1,11 +1,11 @@
-# Walkthrough: Demo 3 — Streaming Event Platform
+# Walkthrough: Demo 4 — Streaming Event Platform
 
 This script guides you through a high-impact presentation of **Real-Time Data Engineering**.
 
 ## 1. The Environment Setup
 **Action**: Start the streaming infrastructure.
 **Command**: `.\task.ps1 up` (Starts core lab)
-**Talk Track**: 
+**Talk Track**:
 - "We are initializing an enterprise-grade cluster locally. We have **Postgres** for our warehouse, **Kafka** for our event bus, and a **Spark Master/Worker** cluster for our real-time compute."
 
 ---
@@ -51,7 +51,23 @@ Get-ChildItem data/iot/delta/quarantine/_delta_log | select -last 5
 
 ---
 
-## 5. Senior-Level Verification
+## 5. Demo: The Chaos Run
+This section proves the platform's **Scalable Quality Gate** by simulating streaming sensor anomalies.
+
+1.  **Inject Chaos**: Run the integrated demo command: `.\task.ps1 demo-iot-stream`.
+2.  **What is happening?**: The `iot_producer.py` generates high-velocity events, some of which contain "chaotic" values (e.g., Temperature > 100°C).
+3.  **Real-Time Divergence**: In the Spark logs, you will see `Processing micro-batch...`.
+4.  **Verification (Delta Lake)**:
+    *   Valid events land in `/data/iot/delta/silver`.
+    *   Faulty events land in `/data/iot/delta/quarantine`.
+5.  **Proof**: The final summary in the terminal will report `Anomalies Detected!` and verify the record count in the quarantine table.
+
+> [!CAUTION]
+> **Interview Point**: "In a streaming context, you cannot wait for a batch to finish to fix errors. I implemented a **Dual-Sink Ingestion** pattern where every micro-batch is evaluated for physical limits. Valid data proceeds to the high-trust Silver layer, while junk data is diverted to a Delta-backed quarantine for investigation—all without pausing the pipeline."
+
+---
+
+## 6. Senior-Level Verification
 **Action**: Check for anomalies.
 **Command**: (Runs automatically at the end of `demo-iot-stream`)
 **Result**: `Anomalies Detected!`

@@ -17,14 +17,33 @@ This demo shifts focus to **"Material Reality."** We simulate a high-volume IoT 
 - **Physical Gate**: Configure **Great Expectations** to act as a **"physics engine."**
 - **Batch Quarantine Pattern**: Watch the pipeline automatically **quarantine** impossible readings into Postgres (Port `5434`).
 
-### 🏗️ Infrastructure Isolation (Enterprise Standard)
+### 🏗️ Ingestion Architecture
+
+```mermaid
+graph TD
+    API[Mock API JSON] --> ETL[IoT ETL Runner]
+    CSV[Sensor CSV File] --> ETL
+    
+    subgraph "Validation & Partitioning"
+        ETL --> Phys[Physical Gate: GE]
+        Phys -- Pass --> PART[Range Partitioning Engine]
+        Phys -- Fail --> QUAR[Quarantine Table]
+    end
+
+    subgraph "Time-Series Hub (Postgres)"
+        PART --> M1[Partition: March 2026]
+        PART --> M2[Partition: April 2026]
+        QUAR --> AUD[(iot_sensor_quarantine)]
+    end
+```
+
+### 🚀 Infrastructure Isolation (Enterprise Standard)
 This demo runs on a dedicated, isolated stack to prevent port and network collisions:
 - **Compose Architecture**: `docker-compose.iot.yml`
 - **Postgres Port**: `127.0.0.1:5434`
 - **Network**: `pde_iot_net`
-- **ETL Service**: `iot-etl`
 
 ---
 **Links:**
 - [**Walkthrough Script**](walkthrough.md)
-- [**Chaos Run Execution**](chaos-run.md)
+- [**Learning Guide (Theory & Interview)**](learning_guide.md)

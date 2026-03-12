@@ -32,10 +32,16 @@ This demo showcases a production-grade IoT data pipeline that prioritizes **Data
 > [!TIP]
 > **Talk Track**: "This demo proves that our pipeline is **Physics-Aware**. We intentionally inject chaotic sensor data and watch the system automatically isolate it into a quarantine zone while keeping the clean production tables pristine."
 
-### 📊 Proof Points:
-- **Partition Verification**: We query `pg_stat_user_tables` to prove data landed in the **March 2026 partition**.
-- **Quarantine Success**: The database confirms that 'Chaotic' records were diverted to the audit table.
-- **Pytest Suite**: 100% pass rate for IoT data transformations and quality logic.
+### 🛠️ Demo: The Chaos Run
+This section proves the platform's **Data Guard** capabilities by simulating sensor malfunction.
+
+1.  **Inject Chaos**: Run the integrated demo command: `.\task.ps1 demo-iot`.
+2.  **Observe Failure**: The pipeline detects "out of bounds" temperature readings (e.g., 500°C) during the **Great Expectations** audit.
+3.  **Automated Divergence**: Instead of crashing the whole pipeline, the script routes only the corrupted batch to the `iot_sensor_quarantine` table.
+4.  **Verification**: Querying the database shows the main tables remain clean while the quarantine table contains the evidence of the chaos.
+
+> [!CAUTION]
+> **Interview Point**: "This is the **Physical Gate** pattern. By isolating anomalies at the batch level into a quarantine partition, we maintain a 'High-Trust' production lake while still preserving the 'Bad' data for forensic analysis by hardware teams."
 
 ---
 

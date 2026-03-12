@@ -36,11 +36,19 @@ Audit log Check (`logs/etl.log`):
 2026-03-12 ... - INFO - Processing applicant data. Sample email: [REDACTED]
 ```
 
-### Verification: Sovereignty Gate
-Postgres Audit (`hr_applicants_quarantine`):
-| full_name | email | failure_reason |
-|-----------|-------|----------------|
-| John Doe  | [REDACTED] | FAILURE_ISO_SOVEREIGNTY |
+### 🛠️ Demo: The Chaos Run
+This section proves the platform's **Privacy Compliance** by simulating an intake of non-compliant data.
+
+1.  **Inject Chaos**: Run the integrated demo command: `.\task.ps1 demo-hr`.
+2.  **Observe Compliance Logic**: The system detects an applicant from a country not on the approved ISO list (e.g., 'XY').
+3.  **PII Sanitization**: Simultaneously, the system scrubs the `email` and `full_name` from all logs to ensure no PII is leaked in plain text.
+4.  **Verification**: 
+    *   `hr_applicants` (Clean table) will NOT contain the non-compliant record.
+    *   `hr_applicants_quarantine` will contain the record, marked with `FAILURE_ISO_SOVEREIGNTY`.
+    *   System logs (`logs/etl.log`) will show `[REDACTED]` instead of real names.
+
+> [!CAUTION]
+> **Interview Point**: "This demo proves **Data Sovereignty by Design**. By routing non-compliant data to a dedicated quarantine store and redacting PII from logs at the ingestion boundary, we ensure the platform remains GDPR/CCPA ready without manual oversight."
 
 ---
 Demo 3: HR Privacy & Compliance Lab is **Verified**.

@@ -17,7 +17,9 @@ services:
       - platform_net
 
   airflow-init:
-    image: apache/airflow:2.8.1-python3.11
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
     container_name: pde-airflow-init
     depends_on:
       airflow-postgres:
@@ -33,7 +35,9 @@ services:
       - platform_net
 
   airflow-webserver:
-    image: apache/airflow:2.8.1-python3.11
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
     container_name: pde-airflow-webserver
     restart: always
     depends_on:
@@ -42,7 +46,6 @@ services:
     env_file: .env
     environment:
       - AIRFLOW__WEBSERVER__BASE_URL=http://localhost:8088
-      - _PIP_ADDITIONAL_DEPENDENCIES=pandas sqlalchemy psycopg2-binary great_expectations pydantic python-dotenv confluent-kafka pyspark delta-spark scipy duckdb
     volumes:
       - ./orchestration/dags:/opt/airflow/dags
       - ./orchestration/logs:/opt/airflow/logs
@@ -57,15 +60,15 @@ services:
       - platform_net
 
   airflow-scheduler:
-    image: apache/airflow:2.8.1-python3.11
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
     container_name: pde-airflow-scheduler
     restart: always
     depends_on:
       airflow-postgres:
         condition: service_healthy
     env_file: .env
-    environment:
-      - _PIP_ADDITIONAL_DEPENDENCIES=pandas sqlalchemy psycopg2-binary great_expectations pydantic python-dotenv confluent-kafka pyspark delta-spark scipy duckdb
     volumes:
       - ./orchestration/dags:/opt/airflow/dags
       - ./orchestration/logs:/opt/airflow/logs

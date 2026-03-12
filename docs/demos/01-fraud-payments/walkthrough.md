@@ -82,7 +82,18 @@ Open `http://127.0.0.1:8888` and use:
 > [!NOTE]
 > **Enterprise Pattern**: The notebook imports production `src/` modules. We never duplicate business logic inside a notebook; we use it as an **interactive layer** over the production codebase.
 
-## 7. Shutdown
+## 7. Demo: The Chaos Run
+This section proves the platform's **Resiliency** by intentionally breaking the data.
+
+1.  **Inject Chaos**: Run the integrated demo command: `.\task.ps1 demo-payments`.
+2.  **Observe Failure**: The pipeline will stop at the **GE Gate** because of a negative transaction amount.
+3.  **Audit the Breach**: Inspect `logs/ge_validation_*.json`. It will show a `failed` status for the `amount_is_positive` expectation.
+4.  **Recovery**: The script automatically regenerates clean data and re-runs the pipeline to prove recovery.
+
+> [!CAUTION]
+> **Interview Point**: "In this phase, I simulate a typical upstream bug (negative currency). My pipeline detects this at the staging gate and halts the load, preventing the corruption from ever leaking into the production warehouse."
+
+## 8. Shutdown
 **PowerShell**:
 ```powershell
 .\task.ps1 down

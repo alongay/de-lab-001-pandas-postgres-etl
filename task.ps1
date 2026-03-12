@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)]
-  [ValidateSet("up", "down", "ps", "logs", "etl", "test", "smoke", "rebuild", "clean", "demo-payments", "demo-iot", "demo-iot-stream", "demo-orchestration", "demo-hr", "platform-up", "platform-down", "platform-init", "platform-status")]
+  [ValidateSet("up", "down", "ps", "logs", "etl", "test", "smoke", "rebuild", "clean", "demo-payments", "demo-iot", "demo-iot-stream", "demo-orchestration", "demo-hr", "demo-observability", "platform-up", "platform-down", "platform-init", "platform-status")]
   [string]$Task
 )
 
@@ -236,5 +236,27 @@ TXN-30003,ACCT-9003,75.50,USD,DECLINED,2026-03-01T12:36:56Z
     Write-Host "`n=== 7. Tearing down services ===" -ForegroundColor Green
     docker compose -f docker-compose.hr.yml down
     Write-Host "`nHR Privacy Demo complete!" -ForegroundColor Green
+  }
+  "demo-observability" {
+    Assert-EnvFile
+    Write-Host "`n=== 1. Starting Lab Platform (Pre-requisite) ===" -ForegroundColor Green
+    docker compose up -d postgres
+    
+    Write-Host "`n=== 2. Establishing Happy Path Baseline ===" -ForegroundColor Green
+    .\scripts\payments\create_payments_demo_data.ps1
+    $env:INGEST_SOURCE = "csv"
+    docker compose run --rm -e PYTHONPATH=/app etl python -m src.payments.etl_run_payments
+    
+    Write-Host "`n=== 3. Simulating Statistical Drift (Amount Shift) ===" -ForegroundColor Green
+    .\scripts\observability\simulate_drift.ps1
+    docker compose run --rm -e PYTHONPATH=/app etl python -m src.payments.etl_run_payments
+    
+    Write-Host "`n=== 4. Running Observability Audit (Metadata Lake Hub) ===" -ForegroundColor Green
+    docker compose -f docker-compose.observability.yml up observability-hub
+    
+    Write-Host "`n=== 5. Tearing down demo services ===" -ForegroundColor Green
+    docker compose down
+    docker compose -f docker-compose.observability.yml down
+    Write-Host "`nObservability Demo complete!" -ForegroundColor Green
   }
 }

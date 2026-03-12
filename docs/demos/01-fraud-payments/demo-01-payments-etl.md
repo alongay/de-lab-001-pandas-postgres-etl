@@ -18,14 +18,33 @@ This demo focuses on **Financial Integrity**. When handling payments, there is *
 - **Chaos Run**: Change one transaction amount to **-75.50** and watch the GE gate stop the pipeline.
 - **Recovery**: Fix the CSV, rerun, and verify the pipeline succeeds.
 
-### 🏗️ Infrastructure Isolation (Enterprise Standard)
+### 🏗️ Ingestion Architecture
+
+```mermaid
+graph TD
+    API[Partner API JSON] --> ETL[Payments ETL Runner]
+    CSV[Partner CSV File] --> ETL
+    
+    subgraph "Transformation & Safety"
+        ETL --> Cast[Standardize Types & UTC]
+        Cast --> GE[Great Expectations Gate]
+    end
+
+    subgraph "Relational Hub (Postgres)"
+        GE -- Pass --> STG[Staging Table]
+        STG --> PROM[Promote-Swap]
+        PROM --> PROD[(raw_payments_canonical)]
+        GE -- Fail --> STOP[Halt & Audit Log]
+    end
+```
+
+### 🚀 Infrastructure Isolation (Enterprise Standard)
 This demo runs on a dedicated, isolated stack to prevent port and network collisions:
 - **Compose Architecture**: `docker-compose.payments.yml`
 - **Postgres Port**: `127.0.0.1:5433`
 - **Network**: `pde_payments_net`
-- **ETL Service**: `payments-etl`
 
 ---
 **Links:**
 - [**Walkthrough Script**](walkthrough.md)
-- [**Chaos Run Execution**](chaos-run.md)
+- [**Learning Guide (Theory & Interview)**](learning_guide.md)

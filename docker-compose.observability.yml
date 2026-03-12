@@ -1,0 +1,18 @@
+services:
+  observability-hub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pde_obs_hub
+    env_file: .env
+    volumes:
+      - ./:/app:rw
+    user: "10001:10001"
+    networks:
+      - platform_net
+    command: ["python", "/app/scripts/observability/view_metadata.py"]
+
+networks:
+  platform_net:
+    external: true
+    name: pde_platform_net

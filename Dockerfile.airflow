@@ -1,0 +1,24 @@
+FROM apache/airflow:2.8.1-python3.11
+
+USER root
+# Install system dependencies if needed (e.g. for scipy/duckdb on some architectures)
+# For now, slim-bookworm based images usually have enough for basic wheels
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+USER airflow
+# Copy requirements if we want to share them, or just install directly
+RUN pip install --no-cache-dir \
+    pandas \
+    sqlalchemy \
+    psycopg2-binary \
+    great_expectations \
+    pydantic \
+    python-dotenv \
+    confluent-kafka \
+    pyspark \
+    delta-spark \
+    scipy \
+    duckdb

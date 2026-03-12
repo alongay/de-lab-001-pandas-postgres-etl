@@ -38,16 +38,17 @@
 - [**Demos Curriculum Index**](demos/README.md) - The master hub for all demo scenarios.
 - [**Demo 1: Fraud-Ready Payments**](demos/01-fraud-payments/walkthrough.md) - Ingesting API/CSV financial data with strict gates.
 - [**Demo 2: IoT Sensor Telemetry**](demos/02-iot-telemetry/walkthrough.md) - High-volume time-series data with partitioning and physical gates.
-- [**Demo 3: HR Applicant Intake**](demos/03-hr-applicants/walkthrough.md) - Privacy, PII Redaction, and Data Sovereignty.
-- ### [4] Orchestration & Governance
-  - [Walkthrough](demos/04-orchestration/walkthrough.md)
-  - [Portfolio Proof](demos/04-orchestration/portfolio-proof.md) (Evidence & Architecture)
-  - [Learning Guide](demos/04-orchestration/learning_guide.md)
-- [**Demo 5: Streaming Event Platform**](demos/03-streaming-platform/walkthrough.md) - Real-time Kafka-Spark ingestion with Medallion Delta Lake.
+- [**Demo 3: HR Applicant Intake**](demos/03-hr-applicants/walkthrough.md) - Privacy, PII Redaction, and Compliance.
+- [**Demo 4: Streaming Event Platform**](demos/04-streaming-platform/walkthrough.md) - Real-time Kafka-Spark ingestion with Medallion Delta Lake.
+- [**Demo 5: Orchestration & Governance**](demos/05-orchestration/walkthrough.md) - Airflow SLAs and platform reliability.
+- [**Demo 6: Proactive Data Observability**](demos/06-observability/walkthrough.md) - Statistical drift detection and metrics monitoring.
 
 ---
 
 ## 🎓 5. Career & Portfolio
-**Resources to help explain this platform in a professional setting.**
+**Resources to help showcase this platform to hiring managers and technical interviewers.**
 
+- [**Resume Project Bullets**](12-resume-project-bullets.md) - senior-level project descriptions for your CV.
+- [**Interview Slide Deck Outline**](13-slide-deck-outline.md) - Technical walkthrough slides and architecture talking points.
 - [**Interview Q&A (DRE/Platform)**](08-interview-qa.md) - Curated questions and senior-level answers based on this lab.
+- [**OCI Cloud Mapping Guide**](10-oci-cloud-mapping.md) - Design plan for cloud migration (Always Free Tier).

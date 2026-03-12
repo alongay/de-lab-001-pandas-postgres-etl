@@ -1,4 +1,6 @@
-# Demo 4 Walkthrough: Enterprise Data Platform Orchestration
+# Walkthrough: Demo 5 — Enterprise Data Platform Orchestration
+
+![Airflow DAG Status](file:///C:/Users/along/.gemini/antigravity/brain/c94d33df-1d63-4e97-a5a4-fb63ccf7673b/airflow_dag_list_1773287125043.png)
 
 This demo showcases how to orchestrate batch and streaming pipelines at scale using **Apache Airflow**.
 
@@ -37,11 +39,17 @@ Check that all DAGs are correctly registered and importing from the `src/` packa
 - **Spark Master**: [http://localhost:8080](http://localhost:8080)
 - **Spark Worker**: [http://localhost:8081](http://localhost:8081)
 
-### 4) Trigger a Quality Breach (SLA Failure)
-1. Stop the `iot-silver-stream` container: `docker stop pde-iot-silver-stream`.
-2. Wait 5 minutes.
-3. Observe the `iot_stream_health_monitor` DAG in Airflow.
-4. Check the scheduler logs for the **Mock alert box** triggered by the SLA Breach.
+### 🛠️ Demo: The Chaos Run
+This section proves the platform's **Governance** by simulating an SLA breach in the streaming layer.
+
+1.  **Inject Chaos**: Manually stop the streaming consumer: `docker stop pde-iot-silver-stream`.
+2.  **Observe Monitoring**: The `iot_stream_health_monitor` DAG in Airflow will fire on its next schedule (every 5 mins).
+3.  **Detect SLA Breach**: The DAG will detect that the `Silver` Delta table has not advanced in the last 5 minutes.
+4.  **Automatic Alerting**: Check the Airflow logs for the `notify_sla_breach` task. It will log a mock alert to the "Critical Operations" channel.
+5.  **Recovery**: Restart the container (`docker start pde-iot-silver-stream`) and watch the DAG return to a `Success` state once data flow resumes.
+
+> [!CAUTION]
+> **Interview Point**: "This is **Proactive Orchestration**. Instead of waiting for a user to complain that a dashboard is stale, I implemented an Airflow-based health monitor that audits the Delta transaction logs in real-time. If the 'Freshness' SLA is breached, the platform automatically alerts operations before the business is impacted."
 
 ---
 
