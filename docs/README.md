@@ -18,8 +18,8 @@
 **Standard Operating Procedures for running and maintaining the data pipeline.**
 
 - [**SOP / Runbook**](operations/01-sop-runbook.md) - The step-by-step operational guide for the ETL process.
-- [**System Admin Guide (SOP)**](operations/02-admin-guide.md) - Admin-level platform maintenance and reliability guide.
 - [**Troubleshooting Guide**](operations/04-troubleshooting.md) - Known issues, log extraction, and recovery procedures.
+- [**Hands-on Mastery Guide**](operations/hands-on-mastery-guide.md) (**New!**) - Step-by-step career readiness labs.
 
 ---
 
@@ -48,7 +48,7 @@
 ## 🎓 5. Career & Portfolio
 **Resources to help showcase this platform to hiring managers and technical interviewers.**
 
-- [**Resume Project Bullets**](12-resume-project-bullets.md) - senior-level project descriptions for your CV.
-- [**Interview Slide Deck Outline**](13-slide-deck-outline.md) - Technical walkthrough slides and architecture talking points.
-- [**Interview Q&A (DRE/Platform)**](08-interview-qa.md) - Curated questions and senior-level answers based on this lab.
-- [**OCI Cloud Mapping Guide**](10-oci-cloud-mapping.md) - Design plan for cloud migration (Always Free Tier).
+- [**Resume Project Bullets**](operations/12-resume-project-bullets.md) - senior-level project descriptions for your CV.
+- [**Interview Slide Deck Outline**](operations/13-slide-deck-outline.md) - Technical walkthrough slides and architecture talking points.
+- [**Interview Q&A (DRE/Platform)**](operations/08-interview-qa.md) - Curated questions and senior-level answers based on this lab.
+- [**OCI Cloud Mapping Guide**](build/10-oci-cloud-mapping.md) - Design plan for cloud migration (Always Free Tier).
