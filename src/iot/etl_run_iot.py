@@ -9,6 +9,9 @@ from src.iot.extract_iot import extract_iot
 from src.iot.transform_iot import transform_iot_telemetry
 from src.iot.quality_ge_iot import validate_iot_telemetry
 from src.iot.load_iot import partition_iot_data, load_iot_data, load_iot_dataframe
+from src.core.observability.metadata_store import MetadataStore
+from src.core.observability.schema_guard import SchemaGuard
+from src.core.observability.data_drift_detector import DataDriftDetector
 
 def run_iot_pipeline():
     """
@@ -69,7 +72,32 @@ def run_iot_pipeline():
             print("❌ Pipeline halted due to quality failure.")
             sys.exit(1)
         else:
-            print(f"✅ Quality Gate Passed. Promoting {len(clean_df)} records to production.")
+            # --- Observability Audit ---
+            store = MetadataStore("/app/data/observability/observability.db")
+            schema_guard = SchemaGuard("/app/data/observability/schemas")
+            drift_detector = DataDriftDetector("/app/data/observability/baselines")
+            
+            # 1. Schema Check
+            schema_guard.check_schema(clean_df, "iot")
+            
+            # 2. Drift Detection
+            drift_reports = drift_detector.detect_drift(clean_df, "iot", ["value"])
+            for report in drift_reports:
+                store.log_drift("iot", report["column"], report["statistic"], report["p_value"], report["is_drifting"])
+                if report["is_drifting"]:
+                    print(f"🚨 DATA DRIFT DETECTED in column {report['column']} (p-value: {report['p_value']:0.4f})")
+
+            # 3. Log execution metrics
+            exec_id = f"IOT_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
+            metrics = {
+                "row_count": int(len(clean_df)),
+                "mean": float(clean_df["value"].mean()) if "value" in clean_df.columns else 0.0,
+                "std": float(clean_df["value"].std()) if "value" in clean_df.columns else 0.0
+            }
+            store.log_metrics(exec_id, "iot_etl_pipeline", "run_iot_pipeline", "iot", metrics)
+            print("✔️ Observability Audit complete.")
+            # --- End Observability ---
+
             load_iot_dataframe(
                 engine, 
                 clean_df, 

@@ -1,16 +1,27 @@
+# System / IDE
 .env
+.ipynb_checkpoints/
+.pytest_cache/
 __pycache__/
 *.pyc
 .DS_Store
+.vscode/
+
+# Data & Storage
 data/
 checkpoints/
-artifacts/
-.ivy2/
-# Runtime / local artifacts
-logs/
-.pytest_cache/
-.ipynb_checkpoints/
-__pycache__/
 *.parquet
 *.crc
+*.db
+*.sqlite
+
+# Logs & Temporary artifacts
+logs/
+artifacts/
+*.log
+*.txt
+Untitled.ipynb
+
+# Project Specific
 task_silver_logs.txt
+task_output.log

@@ -39,7 +39,10 @@
 - [**Demo 1: Fraud-Ready Payments**](demos/01-fraud-payments/walkthrough.md) - Ingesting API/CSV financial data with strict gates.
 - [**Demo 2: IoT Sensor Telemetry**](demos/02-iot-telemetry/walkthrough.md) - High-volume time-series data with partitioning and physical gates.
 - [**Demo 3: HR Applicant Intake**](demos/03-hr-applicants/walkthrough.md) - Privacy, PII Redaction, and Data Sovereignty.
-- [**Demo 4: Enterprise Orchestration**](demos/04-orchestration/walkthrough.md) - Platform governance with Airflow & SLA monitoring.
+- ### [4] Orchestration & Governance
+  - [Walkthrough](demos/04-orchestration/walkthrough.md)
+  - [Portfolio Proof](demos/04-orchestration/portfolio-proof.md) (Evidence & Architecture)
+  - [Learning Guide](demos/04-orchestration/learning_guide.md)
 - [**Demo 5: Streaming Event Platform**](demos/03-streaming-platform/walkthrough.md) - Real-time Kafka-Spark ingestion with Medallion Delta Lake.
 
 ---
