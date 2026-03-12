@@ -10,7 +10,7 @@ This document explains the two primary safety mechanisms built into the `de-lab-
 
 **Why we do this:** In the real world, upstream partners (API or CSV) inevitably send mangled data. A missing `order_total`, a negative refund amount recorded as a positive float, or a non-ISO standard currency (like `US Dollars` instead of `USD`) will poison analytics dashboards and cause downstream machine learning models to fail. The GE gate guarantees that unless the data is structurally immaculate, it will never touch the warehouse.
 
-*   **Execution Location:** Inside `src/etl_run.py`, strictly invoked after `src/transform_payments.py` and before the Postgres UPSERT script.
+*   **Execution Location:** Inside domain-specific runners (e.g., `src/payments/etl_run_payments.py`), strictly invoked after the transformation modules and before the Postgres UPSERT/Load scripts.
 *   **The Golden Rules Checklist:**
     1.  **Immaculate Schema:** Does the dataframe match the exact column order expected? (`partner_id`, `txn_id`, `account_id`, `status`, `amount`, `currency`, etc.)
     2.  **Zero Null Tolerance:** Are core IDs and totals present? (All core fields including `account_id`, `amount`, and `status` are strictly required).
@@ -41,7 +41,7 @@ If the GE gate detects even a single row violating these strict contracts, the s
 Because PostgreSQL's atomic UPSERT (`ON CONFLICT DO UPDATE`) commands are dialectically distinct, our `load_payments.py` script gracefully degrades to generic raw load testing to keep our unit tests blazing fast without relying on actual Docker orchestration availability!
 
 ### Running the Suite:
-```bash
-docker compose run --rm etl pytest
+```powershell
+.\task.ps1 test
 ```
 When running these tests, any generic warnings triggered by upstream Great Expectations packaging are cleanly suppressed via rules found in `pytest.ini`.

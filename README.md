@@ -8,10 +8,13 @@ Container-first, enterprise-style Data Engineering lab:
 - **Core Platform**: PostgreSQL 15 + JupyterLab
 - **Domain Modules**: Isolated ETL and Logic in `src/` (Payments, IoT, Streaming)
 - **Quality Gates**: Great Expectations (Batch) & Spark Quality Gates (Streaming)
+- **Orchestration**: Apache Airflow (Enterprise Task Governance & Monitoring)
 - **Persistence**: PostgreSQL (RDBMS) & Delta Lake (ACID Medallion)
 
 ## 📚 Documentation Hub
 For a complete categorized index of all project materials (Build, SOPs, Architecture, and Demos), visit the **[Documentation Hub](docs/README.md)**.
+- **Runbook**: [Daily Data Tasks](docs/operations/01-sop-runbook.md)
+- **Admin Guide**: [Platform Maintenance & Governance](docs/operations/02-admin-guide.md) (SOP)
 
 ## 🏗️ Repository Architecture
 The lab uses a **Symmetrical Modular Monolith** pattern:
@@ -21,10 +24,12 @@ The lab uses a **Symmetrical Modular Monolith** pattern:
 │  ├─ core/             # Shared utilities (db.py)
 │  ├─ payments/         # Demo 1: Fraud-Ready Payments
 │  ├─ iot/              # Demo 2: IoT Batch Telemetry
-│  └─ streaming/        # Demo 3: Enterprise Streaming
+│  ├─ streaming/        # Demo 3: Enterprise Streaming
+│  ├─ hr/               # Demo 5: HR Compliance & PII
+│  └─ orchestration/     # Demo 4: Platform Symmetrization
 ├─ scripts/             # Operational & Data Gen scripts (Modular)
 ├─ notebooks/           # Domain-specific exploration (Modular)
-├─ data/                # Persistence layers (Payments, IoT, Delta)
+├─ data/                # Persistence layers (Payments, IoT, Delta, HR)
 ├─ logs/                # Audit & Quality artifacts
 └─ docs/                # SOPs, Runbooks, and Demos
 ```
@@ -47,6 +52,8 @@ Choose a demo project to orchestrate:
 - `.\task.ps1 demo-payments`    # Financial ingestion flow
 - `.\task.ps1 demo-iot`         # Batch time-series flow
 - `.\task.ps1 demo-iot-stream`  # Real-time event flow (Kafka/Spark)
+- `.\task.ps1 demo-orchestration` # Enterprise Platform Governance (Airflow)
+- `.\task.ps1 demo-hr`          # Privacy & Compliance flow (PII Redaction)
 
 ### 4) Verify Infrastructure
 ```powershell

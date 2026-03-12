@@ -1,0 +1,9 @@
+pandas
+sqlalchemy
+psycopg2-binary
+great_expectations
+pydantic
+python-dotenv
+confluent-kafka
+pyspark
+delta-spark

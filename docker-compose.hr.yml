@@ -1,0 +1,48 @@
+services:
+  hr-postgres:
+    image: postgres:15.6
+    container_name: pde_hr_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-de_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-de_password}
+      - POSTGRES_DB=${POSTGRES_DB:-de_workshop}
+    ports:
+      - "127.0.0.1:5435:5432" # Use a different host port to avoid any conflict
+    volumes:
+      - hr_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - hr_net
+
+  hr-etl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pde_hr_etl_runner
+    restart: "no"
+    env_file: .env
+    environment:
+      - DATABASE_HOST=hr-postgres
+      - DATABASE_PORT=5432
+      - PYTHONPATH=/app
+    depends_on:
+      hr-postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app:rw
+    user: "10001:10001"
+    networks:
+      - hr_net
+    command: [ "python", "-m", "src.hr.etl_run_hr" ]
+
+networks:
+  hr_net:
+    name: pde_hr_net
+
+volumes:
+  hr_postgres_data:

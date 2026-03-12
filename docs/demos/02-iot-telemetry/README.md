@@ -12,9 +12,17 @@ This demo shifts focus to **"Material Reality."** We simulate a high-volume IoT 
 
 ### 🎓 Teaching Flow
 - **High-Volume Mocking**: Generate a CSV containing thousands of readings with **ghost outliers**.
+- **Infrastructure**: Spin up the isolated environment via `docker-compose.iot.yml`.
 - **Visual Profiling**: Use **JupyterLab** to plot sensor graphs, making faults visually apparent.
 - **Physical Gate**: Configure **Great Expectations** to act as a **"physics engine."**
-- **Batch Quarantine Pattern**: Watch the pipeline automatically **quarantine** impossible readings.
+- **Batch Quarantine Pattern**: Watch the pipeline automatically **quarantine** impossible readings into Postgres (Port `5434`).
+
+### 🏗️ Infrastructure Isolation (Enterprise Standard)
+This demo runs on a dedicated, isolated stack to prevent port and network collisions:
+- **Compose Architecture**: `docker-compose.iot.yml`
+- **Postgres Port**: `127.0.0.1:5434`
+- **Network**: `pde_iot_net`
+- **ETL Service**: `iot-etl`
 
 ---
 **Links:**

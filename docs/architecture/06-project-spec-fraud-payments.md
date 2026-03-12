@@ -18,7 +18,7 @@ Downstream consumers rely on a stable raw table with a predictable schema and ba
 - Provide unit tests and artifacts suitable for CI.
 
 ## Non-Goals (for this lab)
-- Full orchestration (Airflow/Cloud Scheduler).
+- [x] Full orchestration (Airflow/Cloud Scheduler) — **Completed in Demo 4**.
 - Curated layer modeling (dim/fact, marts).
 - CDC/streaming ingestion.
 
@@ -77,8 +77,8 @@ C-20001,ACCT-8001,20.00,USD,AUTHORIZED,2026-03-01T10:00:00Z
 * `POSTGRES_USER`
 * `POSTGRES_PASSWORD`
 * `POSTGRES_DB`
-* `DATABASE_HOST` (in Compose network: `postgres`)
-* `DATABASE_PORT` (default `5432`)
+* `DATABASE_HOST` (Isolated Payments Network: `payments-postgres`)
+* `DATABASE_PORT` (Mapping to `5433` on Host)
 
 ---
 
@@ -179,8 +179,8 @@ Minimize partial data states and support high-availability reads.
 
 ### Run
 
-```bash
-docker compose run --rm etl pytest
+```powershell
+.\task.ps1 test
 ```
 
 ---

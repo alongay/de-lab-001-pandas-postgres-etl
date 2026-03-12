@@ -40,10 +40,10 @@ VALID_UNITS: Dict[str, str] = {
 IOT_RAW_TOPIC = "iot.telemetry.raw"
 
 # === Storage Paths ===
-BRONZE_PATH = "/app/data/iot/delta/bronze"
-SILVER_PATH = "/app/data/iot/delta/silver"
-QUARANTINE_PATH = "/app/data/iot/delta/quarantine"
+BRONZE_PATH = "/app/data/streaming/delta/bronze"
+SILVER_PATH = "/app/data/streaming/delta/silver"
+QUARANTINE_PATH = "/app/data/streaming/delta/quarantine"
 
 # === Checkpoint Paths ===
-CHECKPOINT_BRONZE = "/app/data/iot/checkpoints/bronze"
-CHECKPOINT_SILVER = "/app/data/iot/checkpoints/silver"
+CHECKPOINT_BRONZE = "/app/data/streaming/checkpoints/bronze"
+CHECKPOINT_SILVER = "/app/data/streaming/checkpoints/silver"

@@ -18,7 +18,8 @@ This is a live demo script you can run in an interview or study session. It show
 ## 1. Start Services
 **PowerShell**:
 ```powershell
-.\task.ps1 up
+.\task.ps1 up                   # Starts core lab (Jupyter)
+.\task.ps1 demo-payments        # Orchestrates the isolated demo
 ```
 **Bash**:
 ```bash
@@ -47,11 +48,11 @@ Set `INGEST_SOURCE=csv` in your environment.
 
 **PowerShell**:
 ```powershell
-$env:INGEST_SOURCE="csv"; docker compose run --rm etl
+$env:INGEST_SOURCE="csv"; docker compose -f docker-compose.payments.yml run --rm payments-etl
 ```
 **Bash**:
 ```bash
-INGEST_SOURCE=csv docker compose run --rm etl
+INGEST_SOURCE=csv docker compose -f docker-compose.payments.yml run --rm payments-etl
 ```
 
 **Expected Logs**:
@@ -62,7 +63,7 @@ Set `INGEST_SOURCE=api`.
 
 **PowerShell**:
 ```powershell
-$env:INGEST_SOURCE="api"; docker compose run --rm etl
+$env:INGEST_SOURCE="api"; docker compose -f docker-compose.payments.yml run --rm payments-etl
 ```
 
 **Expected Logs**:

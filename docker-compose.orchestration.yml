@@ -1,0 +1,86 @@
+services:
+  airflow-postgres:
+    image: postgres:15.6
+    container_name: pde-airflow-postgres
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - airflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - platform_net
+
+  airflow-init:
+    image: apache/airflow:2.8.1-python3.11
+    container_name: pde-airflow-init
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      - _AIRFLOW_DB_UPGRADE=true
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
+    command: version
+    networks:
+      - platform_net
+
+  airflow-webserver:
+    image: apache/airflow:2.8.1-python3.11
+    container_name: pde-airflow-webserver
+    restart: always
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      - AIRFLOW__WEBSERVER__BASE_URL=http://localhost:8088
+      - _PIP_ADDITIONAL_DEPENDENCIES=pandas sqlalchemy psycopg2-binary great_expectations pydantic python-dotenv confluent-kafka pyspark delta-spark
+    volumes:
+      - ./orchestration/dags:/opt/airflow/dags
+      - ./orchestration/logs:/opt/airflow/logs
+      - ./orchestration/plugins:/opt/airflow/plugins
+      - ./src:/opt/airflow/src:ro
+      - ./scripts:/opt/airflow/scripts:ro
+      - ./:/app:rw
+    ports:
+      - "127.0.0.1:8088:8080"
+    command: webserver
+    networks:
+      - platform_net
+
+  airflow-scheduler:
+    image: apache/airflow:2.8.1-python3.11
+    container_name: pde-airflow-scheduler
+    restart: always
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      - _PIP_ADDITIONAL_DEPENDENCIES=pandas sqlalchemy psycopg2-binary great_expectations pydantic python-dotenv confluent-kafka pyspark delta-spark
+    volumes:
+      - ./orchestration/dags:/opt/airflow/dags
+      - ./orchestration/logs:/opt/airflow/logs
+      - ./orchestration/plugins:/opt/airflow/plugins
+      - ./src:/opt/airflow/src:ro
+      - ./scripts:/opt/airflow/scripts:ro
+      - ./:/app:rw
+    command: scheduler
+    networks:
+      - platform_net
+
+networks:
+  platform_net:
+    external: true
+    name: pde_platform_net
+
+volumes:
+  airflow_postgres_data:

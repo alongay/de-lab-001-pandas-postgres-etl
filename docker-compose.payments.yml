@@ -1,0 +1,42 @@
+services:
+  payments-postgres:
+    image: postgres:15.6
+    container_name: pde-payments-postgres
+    env_file: .env
+    ports:
+      - "127.0.0.1:5433:5432" # Offset port to avoid collision with core postgres
+    volumes:
+      - payments_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - payments_net
+
+  payments-etl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pde-payments-etl
+    env_file: .env
+    environment:
+      DATABASE_HOST: payments-postgres
+      DATABASE_PORT: "5432"
+      INGEST_SOURCE: ${INGEST_SOURCE:-both}
+    depends_on:
+      payments-postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app:rw
+    user: "10001:10001"
+    networks:
+      - payments_net
+
+networks:
+  payments_net:
+    name: pde_payments_net
+
+volumes:
+  payments_postgres_data:

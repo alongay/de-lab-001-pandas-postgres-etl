@@ -3,14 +3,14 @@
 ## 🏗️ Start / Stop
 ### PowerShell
 ```powershell
-# Why: Compiles the custom Python Dockerfile and starts PostgreSQL/Jupyter in the background.
-docker compose up -d --build
+# Why: Starts the Jupyter development environment.
+.\task.ps1 up
 
-# Why: Verifies that pde_postgres_15 is (healthy) before running pipelines.
-docker compose ps
+# Why: Verifies that core services are healthy.
+.\task.ps1 ps
 
-# Why: Stops and cleanly destroys all active containers.
-docker compose down
+# Why: Stops and cleans up active containers.
+.\task.ps1 down
 ```
 
 ### Bash
@@ -28,18 +28,18 @@ docker compose down
 
 ---
 
-## 🚀 Run ETL
-
-The ETL pipeline evaluates the `INGEST_SOURCE` environment variable to determine which domain to ingest.
+## 🚀 Run Demo Pipelines
 
 ### PowerShell
-
 ```powershell
-# Run Payments ETL
-$env:INGEST_SOURCE="both"; docker compose run --rm etl python -m src.payments.etl_run_payments
+# Run Payments Demo (Isolated on Port 5433)
+.\task.ps1 demo-payments
 
-# Run IoT Batch ETL
-docker compose run --rm -e PYTHONPATH=/app etl python -m src.iot.etl_run_iot
+# Run IoT Batch Demo (Isolated on Port 5434)
+.\task.ps1 demo-iot
+
+# Run HR Compliance Demo (Isolated on Port 5435)
+.\task.ps1 demo-hr
 ```
 
 ### Bash
@@ -68,12 +68,12 @@ docker compose run --rm etl pytest
 
 ---
 
-## 🏎️ Enterprise Streaming (Demo 3)
+## 🏎️ Enterprise Streaming (Demo 5)
 
 ### Start Infrastructure
 ```powershell
-# Starts Kafka and Spark Cluster
-docker compose -f docker-compose.yml -f docker-compose.streaming.yml up -d iot-kafka iot-spark-master iot-spark-worker
+# Starts Kafka and Spark Cluster (Isolated)
+.\task.ps1 demo-iot-stream
 ```
 
 ### Launch Producer & Medallion Streams

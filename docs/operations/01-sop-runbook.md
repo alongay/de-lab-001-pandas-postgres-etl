@@ -19,16 +19,16 @@
 
 ---
 
-## 2. Build and Start Infrastructure
-**What:** Booting up PostgreSQL and JupyterLab as persistent background services.
+## 2. Start Central Lab (Development)
+**What:** Booting up the core PostgreSQL and JupyterLab as persistent development services.
 
-**PowerShell & Bash**:
-```bash
-docker compose up -d --build
+**PowerShell**:
+```powershell
+.\task.ps1 up
 ```
 
 **Verify Health**:
-Run `docker compose ps`. Expect `pde_postgres_15` to be **(healthy)** and `pde_jupyter_lab` to be **Up**.
+Run `.\task.ps1 ps`. Expect `pde_postgres_15` to be **(healthy)** and `pde_jupyter_lab` to be **Up**.
 
 ---
 
@@ -44,12 +44,14 @@ Run `docker compose ps`. Expect `pde_postgres_15` to be **(healthy)** and `pde_j
 
 ---
 
-## 4. Run the ETL Pipeline
-**What:** Executing the modular Python ingestion script in a **transient container**.
+## 4. Run the ETL Pipeline (One-Command)
+**What:** Executing a domain-specific ingestion script in an isolated environment.
 
-**PowerShell & Bash**:
-```bash
-docker compose run --rm etl
+**PowerShell**:
+```powershell
+.\task.ps1 demo-payments    # For Financial Demo
+.\task.ps1 demo-iot         # For IoT Batch Demo
+.\task.ps1 demo-hr          # For HR Compliance Demo
 ```
 
 **Expected Output**:
@@ -88,9 +90,9 @@ Should end with: `ETL pipeline finished successfully` (**Exit Code 0**).
 ## 7. Teardown & Maintenance
 **What:** Shutting down services to free up local resources.
 
-**PowerShell & Bash**:
-```bash
-docker compose down
+**PowerShell**:
+```powershell
+.\task.ps1 down
 ```
 
 > [!WARNING]

@@ -44,6 +44,15 @@ This document curates **high-impact interview questions and answers** based on t
 > [!NOTE]
 > **A:** Time-series queries almost always filter by a specific entity (**Device ID**) and a range of time. A composite index allows the database to locate the device's start point and perform a **high-speed sequential scan** for the requested time range.
 
+### Q: Why do you have separate `docker-compose` files for each demo?
+
+> [!TIP]
+> **A:** This is **Infrastructure Symmetrization**. By isolating each business domain into its own stack, we ensure:
+> - **Port Collision Avoidance**: We can run the Payments and HR demos simultaneously on different offset ports (`5433` vs `5435`).
+> - **Fault Isolation**: A corrupted database volume in the IoT domain doesn't impact the Payments domain.
+> - **Deployment Parity**: It mimics a microservices architecture where each service owns its own persistence layer and infrastructure lifecycle.
+> - **Clean Auditing**: Volume and network names are scoped to the domain (e.g., `pde_payments_net`), making platform-wide logging and monitoring much cleaner.
+
 ---
 
 ## ⚙️ 3. Operations & CI/CD
@@ -104,6 +113,22 @@ This document curates **high-impact interview questions and answers** based on t
 
 > [!WARNING]
 > **A:** **Character Encoding (BOM)** conflicts. We found that PowerShell scripts saved with UTF-8 BOM can misparse string terminators if they contain complex emojis or special characters. I solved this by standardizing on **Pure UTF-8 (No BOM)** and using plain-text status indicators for mission-critical automation.
+
+---
+
+---
+
+## 🛡️ 6. Data Privacy & Compliance (Demo 5)
+
+### Q: How do you handle PII (Personally Identifiable Information) in system logs?
+
+> [!CAUTION]
+> **A:** We implement **In-Memory Redaction**. By using a dedicated `redact_pii` utility in our transformation logic, we scrub sensitive fields (like emails and names) before any logging occurs. This prevents PII from leaking into system logs (Elasticsearch/Splunk/CloudWatch), reducing audit scope and complying with **GDPR/CCPA privacy standards**.
+
+### Q: Explain how you enforce Data Sovereignty in a global pipeline.
+
+> [!IMPORTANT]
+> **A:** We use **Negative Load Gates**. In our HR Demo, we cross-reference incoming country codes against an **ISO Allowed-List**. Any records from non-compliant regions are blocked from the main table and moved to a **Compliance Quarantine** for manual review, ensuring legal data residency boundaries are respected.
 
 ---
 

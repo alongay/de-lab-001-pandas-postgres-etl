@@ -1,0 +1,41 @@
+services:
+  iot-postgres:
+    image: postgres:15.6
+    container_name: pde-iot-postgres
+    env_file: .env
+    ports:
+      - "127.0.0.1:5434:5432" # Offset port to avoid collision
+    volumes:
+      - iot_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - iot_net
+
+  iot-etl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pde-iot-etl
+    env_file: .env
+    environment:
+      DATABASE_HOST: iot-postgres
+      DATABASE_PORT: "5432"
+    depends_on:
+      iot-postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app:rw
+    user: "10001:10001"
+    networks:
+      - iot_net
+
+networks:
+  iot_net:
+    name: pde_iot_net
+
+volumes:
+  iot_postgres_data:
