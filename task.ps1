@@ -177,6 +177,11 @@ TXN-30003,ACCT-9003,75.50,USD,DECLINED,2026-03-01T12:36:56Z
   }
   "platform-up" {
     Assert-EnvFile
+    Write-Host "`n=== [SECURITY] Performance Pre-Flight Checks ===" -ForegroundColor Cyan
+    powershell -ExecutionPolicy Bypass -File .\scripts\security\scan_secrets.ps1
+    # Note: Vulnerability scanning is bi-weekly by policy (Maintenance Matrix) 
+    # but we run a quick secret check on every startup to prevent accidental leaks.
+
     Write-Host "`n=== 1. Starting Orchestration Platform ===" -ForegroundColor Green
     docker compose -f docker-compose.orchestration.yml up -d
   }
