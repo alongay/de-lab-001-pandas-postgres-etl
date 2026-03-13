@@ -118,7 +118,8 @@ This repository is organized as a **domain-oriented data platform** so each demo
 
 1. Start with the [architecture overview](file:///docs/architecture/README.md)  
 2. Review the [demo catalog](file:///docs/demos/README.md)  
-3. **Master the platform** with the [Hands-on Mastery Guide](file:///docs/operations/hands-on-mastery-guide.md)
+- **[Quick-Start & Shutdown Cheatsheet](file:///docs/operations/00-quick-start-cheatsheet.md)**: The essential 2-minute guide for platform lifecycles.
+- **Master the platform** with the [Hands-on Mastery Guide](file:///docs/operations/hands-on-mastery-guide.md)
 4. Run one batch demo  
 5. Run one streaming demo  
 6. Review orchestration and observability docs  
