@@ -332,4 +332,20 @@ This is the name of your primary **Metabase Dashboard**.
 **How to use these in an interview:**
 > *"I built an **Idempotent** platform where my **GX Gates** act as a fail-safe for the data streaming into our **Executive Watchtower**. This ensures that even if a sensor malfunctions, the business metrics remain accurate."*
 
+---
+
+### ⌨️ BI-as-Code & Advanced Telemetry (COMPLETED)
+**Status**: PRODUCTION-GRADE INFRASTRUCTURE
+**Key Accomplishments**:
+
+1.  **Programmable Infrastructure**: Developed a Python-based **Metabase API CLI** (`metabase_api_cli.py`). 
+    - *The Why*: In senior environments, dashboards are treated as code. This CLI allows for automated backups (JSON) and logic-syncing from version control, eliminating manual UI configuration drift.
+2.  **Advanced Analytics (The "Last Mile")**: Expanded the **SQL Catalog** with high-fidelity analytical logic:
+    - **Window Functions**: Implemented `LAG()` and `OVER()` for growth trends and `AVG()` moving averages for IoT sensor noise-filtering.
+    - **Cross-Domain Integrity**: Created a "Global Master Audit" query to monitor production health across Finance, HR, and IoT in a single view.
+3.  **Educational Maturity**: Finalized the **Hands-on Mastery Guide** (8 Labs), including a dedicated lab for BI-as-Code execution.
+
+**How to use this in an interview:**
+> *"I didn't just build dashboards; I built a **Programmable Visibility Layer**. By wrapping the Metabase API in a custom Python CLI, I enabled 'BI-as-Code' where our UI configurations are version-controlled and our metrics use advanced SQL window functions for real-time trend analysis. This ensures our business insights are as resilient as our data pipelines."* 🚀🏙️💎🏁
+
 Does that help clarify the "Senior" story we're building? 🚀🏙️💎🏁
