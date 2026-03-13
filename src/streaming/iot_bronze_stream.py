@@ -17,7 +17,7 @@ from src.streaming.iot_rules import (
 )
 
 def run_bronze_stream():
-    KAFKA_BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP", "iot_kafka:9092")
+    KAFKA_BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP", "iot-kafka:9092")
     
     spark = SparkSession.builder \
         .appName("IoT-Bronze-Stream") \
