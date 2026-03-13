@@ -47,12 +47,21 @@ Create a "Cash Flow" dashboard.
 - **Requirement**: Show total `amount` by `txn_ts` (hourly).
 - **Challenge**: How do you handle multiple currencies? (Semantic layer logic).
 
-### Part C — The Engineer's Watchtower
-Create an "Ops Health" dashboard.
-- **Requirement**: Visualize the count of `drift_instances` over time.
-- **Challenge**: Connect to the observability tables to prove that your Lab 6 "Chaos Run" was captured.
+### Part D — BI-as-Code & Version Control
+Move from "Click-Ops" to "Git-Ops" for your visualization layer.
+- **Requirement**: Use the custom **Metabase CLI** (`metabase_api_cli.py`) to export your dashboard configuration.
+- **Challenge**: Document how treating a dashboard as a JSON file allows for peer reviews, rollback capabilities, and disaster recovery.
 
 ---
+
+## 🏗️ BI-as-Code Architectural Pattern
+Treating your visualization layer as code involves three core pillars:
+
+1.  **Extraction**: Pulling UI configurations (cards, collections, dashboards) via REST API.
+2.  **Versioning**: Storing those JSON configurations in the repository alongside the SQL logic.
+3.  **Synchronization**: Re-applying configurations to new environments (Staging/Production) to ensure consistency.
+
+*This pattern eliminates the common "The dashboard is broken in Prod" syndrome caused by manual UI edits.*
 
 ## 🎙️ Talking Points (Portfolio Ready)
 - *"I implemented Metabase as a first-class citizen in the platform to close the loop between automated auditing and human decision-making."*
