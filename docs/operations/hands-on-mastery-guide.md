@@ -168,6 +168,35 @@ Now that we have metrics in Postgres and DuckDB, how do we show them to stakehol
 **Learning Point**: A data platform is only as good as the decisions it enables. BI is the final "Last Mile" of the engineering lifecycle.
 
 ---
+
+## 🏗️ Lab 8: BI-as-Code & Advanced SQL
+**Objective**: Transition from manual UI clicks to programmable dashboard management.
+
+### Steps:
+1.  **Verify BI Connectivity**:
+    ```powershell
+    python .\scripts\metabase\verify_bi_connectivity.py
+    ```
+2.  **Launch the BI-as-Code CLI**:
+    ```powershell
+    python .\scripts\metabase\metabase_api_cli.py
+    ```
+    - Observe the output: 🚀 `Metabase BI-as-Code CLI Active`
+    - You should see your 5 live dashboards (Executive Watchtower, IoT Pulse, etc.).
+3.  **Export Dashboard Config (Backup-as-Code)**:
+    - Edit `scripts/metabase/metabase_api_cli.py` and uncomment the line:
+      `cli.export_dashboard_config(2, "docs/demos/07-bi-visualization/config_backup.json")`
+    - Run the script again. 
+    - Verify `config_backup.json` exists. You now have a version-controlled backup of your dashboard!
+4.  **Run Advanced Analytics**:
+    - Open `docs/demos/07-bi-visualization/sql_catalog.md`.
+    - Copy the **Revenue Growth %** query and run it in the Metabase "SQL Query" window to see the trend line.
+
+**Learning Point**: In senior environments, dashboard configurations are treated like code—they are version-controlled, backed up, and can be recreated programmatically via API.
+
+---
+
+### 🏆 Final Platform Challenge
 Create a new demo in `src/` and `scripts/` called `shipping/`. 
 - Implement a basic ETL.
 - Add a Great Expectations suite.
