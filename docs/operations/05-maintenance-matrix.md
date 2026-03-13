@@ -2,17 +2,17 @@
 
 This document defines the "Day 2" routines required to keep the Data Engineering Platform stable, secure, and cost-effective.
 
-## 📊 Maintenance Schudule
+## 📊 Maintenance Schedule
 
-| Situation | Required Action | Frequency | Script |
-| :--- | :--- | :--- | :--- |
-| **PR Preview Deploys** | Cleanup orphaned Cloud Run services | On PR Merge/Close | `scripts/cleanup/cleanup_pr_cloudrun.sh` |
-| **Storage Hygiene** | Wipe temporary ingestion data | Weekly | `task.ps1 clean` |
-| **Data Quality Drift** | Audit Quarantine growth vs Production | Daily | `scripts/health/check_endpoints.ps1` |
-| **Cost Management** | Audit for non-free-tier resources | Monthly | `scripts/cost/list_paid_resources.sh` |
-| **Security Posture** | Scan for leaked secrets (pre-commit) | Per Commit | `scripts/security/scan_secrets.ps1` |
-| **Vulnerability Mgmt** | Scan Docker images for Critical CVEs | Bi-Weekly | `scripts/security/scan_vulnerabilities.ps1` |
-| **Documentation** | Verify all demos have valid walkthroughs | Weekly | `scripts/docs/verify_docs_present.ps1` |
+| Situation | Required Action | Frequency | Script | Technical Rationale |
+| :--- | :--- | :--- | :--- | :--- |
+| **PR Preview Deploys** | Cleanup orphaned Cloud Run services | On PR Merge | `scripts/cleanup/cleanup_pr_cloudrun.sh` | **Cost & Security**: Prevents expensive "shadow infrastructure" from persisting after code is merged. |
+| **Storage Hygiene** | Wipe temporary ingestion data | Weekly | `task.ps1 clean` | **Deterministic SOT**: Ensures no stale local CSVs/Parquet files interfere with the next idempotent test run. |
+| **Data Quality Drift** | Audit Quarantine growth vs Prod | Daily | `scripts/health/check_endpoints.ps1` | **Reliability**: If quarantine is growing faster than prod, your source schema has likely drifted upstream. |
+| **Cost Management** | Audit for non-free-tier resources | Monthly | `scripts/cost/list_paid_resources.sh` | **Budget Enforcement**: Prevents surprise "bill shock" from non-preemptible or larger instance classes. |
+| **Security Posture** | Scan for leaked secrets | Per Commit | `scripts/security/scan_secrets.ps1` | **Compliance**: Zero-trust pre-flight check to ensure secrets never touch the remote repository logs. |
+| **Vulnerability Mgmt** | Scan Docker images for CVEs | Bi-Weekly | `scripts/security/scan_vulnerabilities.ps1` | **Hardening**: Systematically checks for OS-level vulnerabilities (CVEs) and privileged 'root' container risks. |
+| **Documentation** | Verify walkthroughs exist | Weekly | `scripts/docs/verify_docs_present.ps1` | **Knowledge Transfer**: Ensures the "Living Lab" remains repeatable for new team members. |
 
 ---
 
