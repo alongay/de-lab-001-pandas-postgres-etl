@@ -349,3 +349,18 @@ This is the name of your primary **Metabase Dashboard**.
 > *"I didn't just build dashboards; I built a **Programmable Visibility Layer**. By wrapping the Metabase API in a custom Python CLI, I enabled 'BI-as-Code' where our UI configurations are version-controlled and our metrics use advanced SQL window functions for real-time trend analysis. This ensures our business insights are as resilient as our data pipelines."* 🚀🏙️💎🏁
 
 Does that help clarify the "Senior" story we're building? 🚀🏙️💎🏁
+---
+
+### ??? Security Shielding & Vulnerability Guardrails (COMPLETED)
+**Status**: ZERO-TRUST PRODUCTION POSTURE
+**Key Accomplishments**:
+
+1.  **Vulnerability Orchestration**: Implemented an automated **Docker Image Scanner** (`scan_vulnerabilities.ps1`).
+    - *The Why*: Senior Data Engineers recognize that code isn't the only attack vector; the **OS-level libraries** inside your containers often harbor CVEs. This script identifies "High" risks and privileged "root" user execution.
+2.  **Secret Scrubbing Pre-Flight**: Integrated a **Secret Scanner** (`scan_secrets.ps1`) directly into the `platform-up` sequence.
+    - *The Why*: Prevents the #1 cause of data breaches�leaked credentials in version control. By running this on every startup, we enforce a **Secure-by-Default** culture.
+3.  **Proactive Patching Policy**: Formalized a "CVE Remediation SOP" in the **Maintenance Matrix**.
+    - *The Why*: Security is a process, not a state. We define clear SLAs for patching images when vulnerabilities reach a "Critical" threshold.
+
+**How to use this in an interview:**
+> *"I adopted a **Zero-Trust** approach to our data infrastructure. Beyond standard encryption, I implemented automated **Vulnerability Scanning** for our container images and integrated a **Secret Scrubbing Guardrail** into our platform startup. This ensures that our environment isn't just functional, but hardened against both application-layer and OS-layer risks. In a senior role, I view security as a first-class citizen of the CI/CD pipeline, not an afterthought."* ????????????
