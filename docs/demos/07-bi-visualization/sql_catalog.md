@@ -56,5 +56,62 @@ ORDER BY partition_date DESC;
 
 ---
 
+## 📈 Advanced Analytics (Window Functions & Trends)
+
+### 1. Daily Revenue Growth % (Finance)
+**Purpose**: Trend analysis for executive reporting.
+```sql
+SELECT 
+    transaction_date, 
+    daily_revenue,
+    100 * (daily_revenue - LAG(daily_revenue) OVER (ORDER BY transaction_date)) / LAG(daily_revenue) OVER (ORDER BY transaction_date) as growth_percentage
+FROM (
+    SELECT date(transaction_date) as transaction_date, sum(amount_usd) as daily_revenue
+    FROM payments.transactions_daily
+    GROUP BY 1
+) subquery;
+```
+
+### 2. Applicant Aging (HR Velocity)
+**Purpose**: Identify bottlenecks in the hiring pipeline.
+```sql
+SELECT 
+    full_name, 
+    status, 
+    CURRENT_DATE - date(application_date) as days_in_pipeline
+FROM hr.applications
+WHERE status NOT IN ('hired', 'rejected')
+ORDER BY days_in_pipeline DESC;
+```
+
+### 3. IoT Sensor Moving Average (Smoothing)
+**Purpose**: Filter noise from real-time streams for better alerts.
+```sql
+SELECT 
+    timestamp, 
+    sensor_id, 
+    temperature,
+    AVG(temperature) OVER (PARTITION BY sensor_id ORDER BY timestamp ROWS BETWEEN 5 PRECEDING AND CURRENT ROW) as filtered_temp
+FROM iot_telemetry_silver;
+```
+
+---
+
+## 🛡️ Cross-Domain Quality Monitoring
+
+### 1. Global Pipeline Integrity (The "Master Audit")
+**Purpose**: A single metric summarizing health across all domains.
+```sql
+SELECT 'IoT' as domain, count(*) as record_count, 'Quarantined' as status FROM iot_telemetry_quarantine
+UNION ALL
+SELECT 'IoT' as domain, count(*) as record_count, 'Production' as status FROM iot_telemetry_silver
+UNION ALL
+SELECT 'HR' as domain, count(*) as record_count, 'Clean' as status FROM hr.applications
+UNION ALL
+SELECT 'Payments' as domain, count(*) as record_count, 'Processed' as status FROM payments.transactions_daily;
+```
+
+---
+
 ## 🧪 Interview Perspective
-"I don't just 'build' dashboards in the UI; I manage the **BI-as-Code**. Every metric in Metabase is backed by a version-controlled SQL script in our `sql_catalog.md`, ensuring that our business logic is auditable and reproducible."
+"I don't just 'build' dashboards in the UI; I manage the **BI-as-Code**. Every metric in Metabase is backed by a version-controlled SQL script in our `sql_catalog.md`, ensuring that our business logic is auditable and reproducible. By using **Window Functions** in SQL, I provide deeper insights like moving averages and growth trends rather than just raw counts."

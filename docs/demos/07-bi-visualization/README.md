@@ -19,8 +19,9 @@ To master the BI layer, follow these documents in order:
 ### 🛠️ BI Engineering Assets
 To move beyond "point-and-click" BI, we have formalized our visualization logic:
 
-*   [**SQL Catalog**](sql_catalog.md) — Version-controlled source of truth for all dashboard queries.
+*   [**SQL Catalog**](sql_catalog.md) — Version-controlled source of truth for all dashboard queries (includes Window Functions & Trends).
 *   [**Connectivity Script**](../../scripts/metabase/verify_bi_connectivity.py) — Automated verification of the Warehouse-to-Metabase bridge.
+*   [**BI-as-Code CLI**](../../scripts/metabase/metabase_api_cli.py) — Python SDK wrapper for programmatically managing dashboards via the Metabase API.
 
 ---
 
