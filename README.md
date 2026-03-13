@@ -1,126 +1,98 @@
-# Enterprise Data Engineering Demo Platform
+# 🏗️ Enterprise Data Engineering & Observability Platform
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Stack: Medallion](https://img.shields.io/badge/Architecture-Medallion-orange.svg)](#-architectural-pillars)
+[![Security: Zero--Trust](https://img.shields.io/badge/Security-Zero--Trust-green.svg)](#-hardened-security-posture)
+[![Ops: Idempotent](https://img.shields.io/badge/Ops-Idempotent-brightgreen.svg)](#-operational-rigor)
 
-A production-style data engineering portfolio that demonstrates how to build, validate, operate, and observe modern data pipelines across **batch ETL**, **time-series telemetry**, **real-time streaming**, **orchestration**, and **cloud mapping**.
-
-This repository is designed to show how data engineers go beyond moving data from one system to another. It focuses on building pipelines that are:
-
-- **correct** through strict validation and schema enforcement
-- **resilient** through quarantine and failure isolation
-- **replayable** through raw data preservation
-- **observable** through freshness, SLA, and health monitoring
-- **production-shaped** through orchestration, partitioning, and cloud-aligned architecture
-
-## What’s inside
-
-The platform is organized as a connected set of demos that build on one another:
-
-- **Demo 1 — Payments ETL:** batch ingestion, Great Expectations, staging/promote, canonical outputs
-- **Demo 2 — IoT Batch Telemetry:** physical validation, UTC normalization, partitioning, quarantine
-- **Demo 3 — IoT Streaming Platform:** Kafka, Spark Structured Streaming, Delta Bronze/Silver, anomaly routing
-- **Demo 4 — Orchestration & SLA Governance:** Airflow, retries, freshness checks, alerting
-- **Demo 5 — Observability:** validation artifacts, Delta log freshness, quarantine growth monitoring
-- **Demo 6 — OCI Cloud Mapping:** local-to-cloud platform blueprint for Oracle Cloud Infrastructure
-- **Demo 7 — Business Intelligence:** Metabase integration, real-time dashboards, metrics visualization (Port 3010)
-
-## Core technologies
-
-`Python` · `SQL` · `PostgreSQL` · `Great Expectations` · `Kafka` · `Spark Structured Streaming` · `Delta Lake` · `Airflow` · `Docker` · `OCI`
-
-## Why this project matters
-
-This repo is built to answer an important engineering question:
-
-> How do you design data systems that remain trustworthy when data is incomplete, wrong, duplicated, delayed, or physically impossible?
-
-The answer, demonstrated throughout this project, is to combine:
-
-- validation gates
-- quarantine patterns
-- replayable raw layers
-- clean curated outputs
-- orchestration and retries
-- observability and freshness monitoring
-
-## Repository structure
-
-This repository is organized as a **domain-oriented data platform** so each demo remains isolated, testable, and easy to extend while shared platform capabilities stay reusable.
-
-```text
-.
-├── src/                    # Core application logic and domain ETL modules
-│   ├── core/               # Shared utilities (DB, config, logging, observability hooks)
-│   ├── payments/           # Demo 01: Payments ETL / fraud-style validation
-│   ├── iot/                # Demo 02: Batch IoT telemetry pipeline
-│   ├── hr/                 # Demo 03: HR privacy / compliance pipeline
-│   ├── streaming/          # Demo 04: Kafka + Spark + Delta streaming logic
-│   └── orchestration/      # Demo 05: Airflow orchestration and platform monitoring
-│
-├── docs/                   # Documentation hub
-│   ├── demos/              # Demo walkthroughs, specs, and chaos-run guides
-│   ├── architecture/       # System diagrams and design documents
-│   ├── build/              # Infrastructure, setup, CI/CD, and cloud mapping
-│   ├── operations/         # SOPs, runbooks, troubleshooting, and checklists
-│   └── assets/             # Screenshots, banners, proof-pack visuals
-│
-├── scripts/                # Data generation and operational helper scripts
-│   ├── payments/           # Payment demo generators and helpers
-│   ├── iot/                # Sensor data generators and telemetry helpers
-│   └── ...                 # Symmetrical layout for additional domains
-│
-├── notebooks/              # Domain-specific exploration and validation notebooks
-│   ├── payments/           # Fraud analysis and profiling
-│   ├── streaming/          # Delta Lake audits and streaming validation
-│   └── ...                 # Symmetrical layout for additional domains
-│
-├── data/                   # Isolated persistence layers and demo data
-│   ├── payments/           # Batch landing zones and relational demo storage
-│   ├── streaming/          # Delta Lake tables, checkpoints, and stream artifacts
-│   └── ...                 # Symmetrical layout for additional domains
-│
-├── orchestration/          # Apache Airflow control plane
-│   ├── dags/               # DAGs for orchestration, SLA, and freshness monitoring
-│   └── plugins/            # Custom Airflow operators and helpers
-│
-├── tests/                  # Pytest suite and QA gates
-│   ├── core/               # Shared logic tests
-│   ├── payments/           # Payments domain tests
-│   ├── iot/                # IoT domain tests
-│   └── ...                 # Symmetrical layout for additional domains
-│
-├── task.ps1                # PowerShell task runner
-├── docker-compose.yml      # Core platform services
-├── docker-compose.*.yml    # Domain-specific isolated stacks
-└── README.md               # Showcase entry point
-```
-
-### Design principles behind the structure
-
-* **Domain isolation:** Each demo has its own logic, scripts, data, and notebooks so changes in one area do not create unnecessary coupling in another.
-* **Shared core utilities:** Common services such as database access, configuration, and observability hooks live in `src/core/` and are reused across domains.
-* **Documentation-first layout:** Architecture, operations, build guidance, and demo walkthroughs are separated so the repo works as both a portfolio and a study resource.
-* **Operational symmetry:** Scripts, notebooks, data, and tests follow the same domain pattern wherever possible, making the repository easier to navigate and scale.
-* **Platform control plane separation:** Airflow orchestration is kept at the platform level because it supervises pipelines rather than behaving like a single domain ETL module.
-
-## Quick access (Port map)
-
-| Service | Local URL | Description |
-| :--- | :--- | :--- |
-| **Airflow** | [http://localhost:8088](http://localhost:8088) | Pipeline orchestration & monitoring |
-| Metabase (BI)   | http://localhost:3010 | Admin Dashboard (Watchtower) |
-| Data Quality    | http://localhost:3010/dashboard/5-data-quality-hub | Observability & Quarantine |
-| **Jupyter** | [http://localhost:8888](http://localhost:8888) | Data exploration & notebooks |
-| **Spark Master** | [http://localhost:8080](http://localhost:8080) | Streaming processing engine |
-| **Spark Worker** | [http://localhost:8081](http://localhost:8081) | Spark execution logs |
+A production-grade data engineering repository showcasing the **senior-level orchestration** of multi-domain data pipelines. This platform demonstrates the transition from simple ETL to a **hardened, observable, and programmable data ecosystem.**
 
 ---
 
-## Best way to read this repo
+## 🏛️ Architectural Pillars
 
-1. Start with the [architecture overview](file:///docs/architecture/README.md)  
-2. Review the [demo catalog](file:///docs/demos/README.md)  
-- **[Quick-Start & Shutdown Cheatsheet](file:///docs/operations/00-quick-start-cheatsheet.md)**: The essential 2-minute guide for platform lifecycles.
-- **Master the platform** with the [Hands-on Mastery Guide](file:///docs/operations/hands-on-mastery-guide.md)
-4. Run one batch demo  
-5. Run one streaming demo  
-6. Review orchestration and observability docs  
-7. Explore cloud mapping and interview artifacts
+This platform is built on four non-negotiable engineering principles:
+
+1.  **Medallion Architecture (Bronze/Silver/Delta)**: Structured data lifecycle ensuring 100% auditability and 100% downstream quality.
+2.  **Programmable Visibility (BI-as-Code)**: Treating dashboards as version-controlled assets, synchronized via custom Python wrappers over the Metabase API.
+3.  **Zero-Trust Security**: Automated pre-flight secret scrubbing and bi-weekly container vulnerability (CVE) orchestration.
+4.  **Idempotent Operations**: A centralized PowerShell control plane (`task.ps1`) ensuring deterministic environment state across local and cloud environments.
+
+---
+
+## 🎡 The Platform Experience
+
+The platform is organized into three distinct "Worlds" (Domains) overseen by a unified control plane:
+
+- **💳 Finance (Payments)**: High-integrity batch ETL with strict **Great Expectations** fraud-style validation gates.
+- **🏥 HR (Talent)**: Privacy-aware compliance pipelines demonstrating PII redaction and audit trails.
+- **🛰️ IoT (Telemetry)**: High-velocity **Spark Structured Streaming** with Kafka ingestion and real-time anomaly routing.
+
+---
+
+## 🔭 The Executive Watchtower (BI-as-Code)
+*Integrated Metabase Suite — Access at [http://localhost:3010](http://localhost:3010)*
+
+| Dashboard | Domain | Purpose | Senior Proof Point |
+| :--- | :--- | :--- | :--- |
+| **Executive Watchtower** | Business | Global KPI visibility | Advanced SQL window functions for trend analysis. |
+| **Talent Insights** | HR | Hiring funnel observability | Aggregated metrics over sensitive redacted data. |
+| **IoT Pulse** | Telemetry | Real-time sensor health | Visualizing Spark streaming throughput and heat-maps. |
+| **Data Quality Hub** | Ops | **The Data Police** | Real-time visualization of the `Quarantine` layer vs Production. |
+
+---
+
+## 🛡️ Hardened Security Posture
+
+Data engineering doesn't stop at the code level. This platform implements:
+- **Pre-Flight Secret Scanning**: Integrated into `platform-up` to ensure no credentials hit remote logs.
+- **Vulnerability Scanning**: Automated scripts to audit Docker images for high-risk CVEs and privileged root execution.
+- **Least-Privilege RBAC**: Isolated database users for each domain to prevent lateral data movement.
+
+---
+
+## 🛠️ Operational Rigor
+
+The platform is managed via an **Idempotent Task Runner** (`task.ps1`). 
+
+```powershell
+# Bring up the entire hardened platform
+./task.ps1 platform-up
+
+# Clean environment to a deterministic state
+./task.ps1 clean
+
+# Run domain-specific demos with auditing enabled
+./task.ps1 demo-payments
+```
+
+---
+
+## 🧭 Onboarding & Mastery Guide
+
+If you are a reviewer or a student, follow the [Hands-on Mastery Guide](docs/operations/hands-on-mastery-guide.md). It contains 8 curated labs designed to take you from environment basics to **Chaos Auditing** and **BI-as-Code Synchronization**.
+
+---
+
+## 📦 Repository Structure
+
+```text
+.
+├── src/                    # Core logic (Domain-isolated ETL)
+├── docs/                   # The "Library" (Demos, Architecture, Operations)
+├── orchestration/          # The "Conductor" (Airflow DAGs)
+├── scripts/                # The "Automation" (Security, Cleanup, Generation)
+├── task.ps1                # The "Remote Control" (Idempotent Platform Runner)
+└── docker-compose.yml      # The "Blueprint" (Service containerization)
+```
+
+---
+
+## 💡 Interview War Stories
+*Featured in [docs/my notes](docs/%22my%20notes%22)*
+- **The "Invisible Data" Incident**: How GX Quarantine gates caught impossible 500°C IoT data.
+- **The "Light Switch" Deployment**: Why Idempotency is the silent killer of production bugs.
+- **The "Programmable Dashboard"**: Transitioning from Click-Ops to Git-Ops in BI.
+
+---
+
+**Status: PRODUCTION-READY** 🚀🏙️💎🏁👑
