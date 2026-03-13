@@ -1,15 +1,10 @@
-import os
-from sqlalchemy import create_engine
-from dotenv import load_dotenv
-
-load_dotenv()
+from src.core.db import create_postgres_engine
 
 def load_applicants(valid_df, quarantine_df):
     """
     Persists HR applicant data to Postgres.
     """
-    db_url = os.getenv("DB_URL", "postgresql://pde_user:pde_password@localhost:5432/pde_db")
-    engine = create_engine(db_url)
+    engine = create_postgres_engine()
 
     if not valid_df.empty:
         valid_df.to_sql(

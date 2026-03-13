@@ -1,8 +1,9 @@
+import sys
+import os
+from datetime import datetime, timedelta
+import duckdb
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
-import os
-import sys
 
 # Ensure src is in path for Airflow
 sys.path.append('/app')
@@ -17,7 +18,7 @@ def audit_platform_health():
     
     print("Checking for recent Data Drift...")
     # Get drift reports from the last 24 hours
-    with store.duckdb.connect(store.db_path) as conn:
+    with duckdb.connect(store.db_path) as conn:
         drift_count = conn.execute("""
             SELECT count(*) FROM drift_reports 
             WHERE is_drifting = TRUE 

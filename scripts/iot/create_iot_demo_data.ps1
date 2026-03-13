@@ -18,32 +18,32 @@ function New-ReadingRow {
   param($deviceId, $ts, $metric)
 
   if ($metric -eq "temp_c") {
-    $unit = "C"
-    $value = [math]::Round((20 + (Get-Random -Minimum -5 -Maximum 8) + (Get-Random) ), 2)
+    $unit = "c"
+    $value = [math]::Round((20 + (Get-Random -Minimum -5 -Maximum 8) + (Get-Random -Minimum 0.0 -Maximum 1.0)), 2)
     # Outliers: unrealistic temps
-    if ((Get-Random) -lt $OutlierRate) { $value = (Get-Random -Minimum -60 -Maximum 120) }
+    if ((Get-Random -Minimum 0.0 -Maximum 1.0) -lt $OutlierRate) { $value = (Get-Random -Minimum -60 -Maximum 120) }
   }
   elseif ($metric -eq "humidity_pct") {
     $unit = "pct"
-    $value = [math]::Round((40 + (Get-Random -Minimum -15 -Maximum 25) + (Get-Random)), 2)
+    $value = [math]::Round((40 + (Get-Random -Minimum -15 -Maximum 25) + (Get-Random -Minimum 0.0 -Maximum 1.0)), 2)
     # Outliers: impossible humidity
-    if ((Get-Random) -lt $OutlierRate) { $value = (Get-Random -Minimum -30 -Maximum 170) }
+    if ((Get-Random -Minimum 0.0 -Maximum 1.0) -lt $OutlierRate) { $value = (Get-Random -Minimum -30 -Maximum 170) }
   }
   elseif ($metric -eq "pressure_hpa") {
-    $unit = "hPa"
-    $value = [math]::Round((1013 + (Get-Random -Minimum -30 -Maximum 30) + (Get-Random)), 2)
+    $unit = "hpa"
+    $value = [math]::Round((1013 + (Get-Random -Minimum -30 -Maximum 30) + (Get-Random -Minimum 0.0 -Maximum 1.0)), 2)
     # Outliers
-    if ((Get-Random) -lt $OutlierRate) { $value = (Get-Random -Minimum 100 -Maximum 2000) }
+    if ((Get-Random -Minimum 0.0 -Maximum 1.0) -lt $OutlierRate) { $value = (Get-Random -Minimum 100 -Maximum 2000) }
   }
 
   # Unit mismatch chaos
-  if ((Get-Random) -lt ($OutlierRate / 2)) {
+  if ((Get-Random -Minimum 0.0 -Maximum 1.0) -lt ($OutlierRate / 2)) {
     $unit = "F"  # wrong for temp_c
   }
 
   # Missing timestamp chaos
   $tsOut = $ts
-  if ((Get-Random) -lt $MissingTsRate) { $tsOut = "" }
+  if ((Get-Random -Minimum 0.0 -Maximum 1.0) -lt $MissingTsRate) { $tsOut = "" }
 
   return [PSCustomObject]@{
     device_id   = $deviceId

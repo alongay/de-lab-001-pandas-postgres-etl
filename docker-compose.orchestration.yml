@@ -69,6 +69,8 @@ services:
       airflow-postgres:
         condition: service_healthy
     env_file: .env
+    environment:
+      - DATABASE_HOST=postgres
     volumes:
       - ./orchestration/dags:/opt/airflow/dags
       - ./orchestration/logs:/opt/airflow/logs
@@ -77,6 +79,17 @@ services:
       - ./scripts:/opt/airflow/scripts:ro
       - ./:/app:rw
     command: scheduler
+    networks:
+      - platform_net
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: pde-metabase
+    restart: always
+    ports:
+      - "127.0.0.1:3010:3000"
+    environment:
+      - MB_JETTY_PORT=3000
     networks:
       - platform_net
 

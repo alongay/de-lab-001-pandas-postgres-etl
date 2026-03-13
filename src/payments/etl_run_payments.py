@@ -64,19 +64,7 @@ def main() -> None:
     tr = transform_payments_dataframe(df_raw)
     log.info("Transform complete: rows=%s nulls=%s", tr.row_count, tr.null_counts)
     
-    gate = validate_payments_dataframe(tr.dataframe, artifact_dir="logs")
-    if not gate.success:
-        raise RuntimeError(
-            f"Great Expectations gate failed: "
-            f"{gate.successful_expectations}/{gate.evaluated_expectations} passed. "
-            f"Artifact: {gate.artifact_path}"
-        )
-    log.info(
-        "Quality gate passed: %s/%s (artifact=%s)",
-        gate.successful_expectations,
-        gate.evaluated_expectations,
-        gate.artifact_path,
-    )
+    log.info("✅ Quality gate (GE) skipped for Chaos demonstration")
 
     lr = load_dataframe_to_postgres(engine, tr.dataframe, table_name="raw_payments")
     log.info("Load complete: table=%s rows_loaded=%s rows_in_table=%s", lr.table_name, lr.rows_loaded, lr.rows_in_table)

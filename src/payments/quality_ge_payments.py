@@ -39,7 +39,7 @@ def validate_payments_dataframe(df: pd.DataFrame, artifact_dir: str = "logs") ->
         raise ValueError("Quality gate failed: dataframe is empty.")
 
     # GE validator
-    v = ge.from_pandas(df)
+    v = ge.dataset.PandasDataset(df)
 
     # Expectations
     v.expect_table_columns_to_match_ordered_list([

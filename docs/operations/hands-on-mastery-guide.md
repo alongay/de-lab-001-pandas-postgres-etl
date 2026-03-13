@@ -122,23 +122,52 @@ Build a real-time anomaly detection engine using the industry-standard "Medallio
 
 ---
 
-## 📈 Lab 6: Statistical Observability
+## 📈 Lab 6: Statistical Observability (Chaos Edition)
 **Objective**: Detect **Silent Data Drift** using metadata auditing.
 
+### The Challenge:
+Standard quality gates catch "broken" data (e.g., negative amounts). But what if the data is "valid" but "statistically impossible"? (e.g., an sudden 1000% spike in transaction values).
+
 ### Steps:
-1.  **Run the Audit Lab**:
+1.  **Inject Chaos**:
     ```powershell
-    .\task.ps1 demo-observability
+    .\scripts\payments\inject_payment_drift.ps1
     ```
-2.  **Inspect the Audit Hub**:
-    - The lab uses **DuckDB** to analyze trends in transformation logs.
-    - Look for "Drift Detected!" in the output—this happens when the *distribution* of data changes, even if the individual records are "valid".
+2.  **Trigger the Pipeline**:
+    - Go to Airflow (`localhost:8088`).
+    - Trigger `payments_etl_pipeline`.
+    - Observe that it completes (because we bypassed GE for this demo to show "silent" failure).
+3.  **Run the Audit**:
+    - Trigger `observability_audit_platform`.
+    - **Check the Logs**: Look for `🚨 ALERT: 1 data drift instances detected!`.
 
 **Learning Point**: Quality Gates catch broken data. Observability catches **drifting** data.
 
 ---
 
-## 🏆 Graduation Task
+## 📊 Lab 7: Platform Extensions (BI & Visualization)
+**Objective**: Integrate **Metabase** for real-time business intelligence.
+
+### The Challenge:
+Now that we have metrics in Postgres and DuckDB, how do we show them to stakeholders?
+
+### Steps:
+1.  **Spin up the BI Layer**: 
+    ```powershell
+    # Metabase is pre-configured in the orchestration stack
+    .\task.ps1 platform-up
+    ```
+2.  **Access Metabase**: [http://localhost:3010](http://localhost:3010)
+3.  **Setup Account**: Follow the wizard to create your admin user.
+4.  **Connect to Warehouse**: 
+    - **Host**: `postgres` (internal Docker hostname)
+    - **Database**: `de_workshop`
+    - **User/Password**: `de_user` / `de_password`
+5.  **Build your first Dashboard**: Visualize `raw_payments` and the `drift_reports` analyzed in Lab 6.
+
+**Learning Point**: A data platform is only as good as the decisions it enables. BI is the final "Last Mile" of the engineering lifecycle.
+
+---
 Create a new demo in `src/` and `scripts/` called `shipping/`. 
 - Implement a basic ETL.
 - Add a Great Expectations suite.

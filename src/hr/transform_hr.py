@@ -34,8 +34,8 @@ def transform_applicants(df):
 
     # Standardize columns
     df['email'] = df['email'].str.strip().str.lower()
-    df['full_name'] = df['full_name'].str.strip().title()
-    df['iso_country'] = df['iso_country'].str.strip().upper()
+    df['full_name'] = df['full_name'].str.strip().str.title()
+    df['iso_country'] = df['iso_country'].str.strip().str.upper()
     
     # Add extraction timestamp
     df['ingested_at'] = pd.Timestamp.utcnow()

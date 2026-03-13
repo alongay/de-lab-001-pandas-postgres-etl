@@ -3,14 +3,19 @@
 ## 🛠️ Demo: The Chaos Run
 This section proves the platform's **Intelligence** by detecting statistical drift in a live ETL pipeline.
 
-1.  **Inject Chaos**: Run the specialized drift simulation: `.\task.ps1 demo-observability`.
+1.  **Inject Chaos**: Run the specialized drift simulation:
+    ```powershell
+    .\scripts\payments\inject_payment_drift.ps1
+    ```
 2.  **What is happening?**:
-    *   The script first establishes a "Normal" baseline using clean payments data.
-    *   It then injects a 10x shift in the transaction amounts (e.g., changing the mean from $50 to $500).
-3.  **Detect Statistical Shift**: The ETL runner calculates the **Kolmogorov-Smirnov (KS) Test** p-value during the transformation phase.
-4.  **Observe the Alert**: The terminal logs will scream `🚨 DATA DRIFT DETECTED: amount (KS p-value: 0.0000)`.
-5.  **Audit the Hub**: Run the Observability Viewer: `docker compose -f docker-compose.observability.yml up`.
-    *   The viewer will display the persistent alert in the central metadata store (`observability.db`).
+    *   The script injects "Impossible High" amounts into the CSV source using a Power Curve distribution.
+    *   It bypasses the Great Expectations quality gate (which would normally stop the "broken" data) to simulate a "silent" upstream error.
+3.  **Run the ETL**: Trigger the **`payments_etl_pipeline`** DAG in Airflow.
+    *   The ETL calculates the **Kolmogorov-Smirnov (KS) Test** during the transformation phase.
+    *   Look for logs: `🚨 DATA DRIFT DETECTED in column amount (p-value: 0.0000)`.
+4.  **The Auditor's Verdict**: Trigger the **`observability_audit_platform`** DAG.
+    *   It audits the central **Metadata Lake (DuckDB)** and flags the breach.
+    *   Log output: `🚨 ALERT: 1 data drift instances detected in the last 24h!`.
 
 > [!CAUTION]
 > **Interview Point**: "Simple validation only catches 'wrong' data types. I implemented **Statistical Observability** that detects when the distribution of data changes. This catches subtle upstream bugs—like a currency conversion error or a malfunctioning promotional engine—that schema checks would miss entirely."

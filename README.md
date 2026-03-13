@@ -20,6 +20,7 @@ The platform is organized as a connected set of demos that build on one another:
 - **Demo 4 — Orchestration & SLA Governance:** Airflow, retries, freshness checks, alerting
 - **Demo 5 — Observability:** validation artifacts, Delta log freshness, quarantine growth monitoring
 - **Demo 6 — OCI Cloud Mapping:** local-to-cloud platform blueprint for Oracle Cloud Infrastructure
+- **Demo 7 — Business Intelligence:** Metabase integration, real-time dashboards, metrics visualization (Port 3010)
 
 ## Core technologies
 
@@ -99,6 +100,19 @@ This repository is organized as a **domain-oriented data platform** so each demo
 * **Documentation-first layout:** Architecture, operations, build guidance, and demo walkthroughs are separated so the repo works as both a portfolio and a study resource.
 * **Operational symmetry:** Scripts, notebooks, data, and tests follow the same domain pattern wherever possible, making the repository easier to navigate and scale.
 * **Platform control plane separation:** Airflow orchestration is kept at the platform level because it supervises pipelines rather than behaving like a single domain ETL module.
+
+## Quick access (Port map)
+
+| Service | Local URL | Description |
+| :--- | :--- | :--- |
+| **Airflow** | [http://localhost:8088](http://localhost:8088) | Pipeline orchestration & monitoring |
+| Metabase (BI)   | http://localhost:3010 | Admin Dashboard (Watchtower) |
+| Data Quality    | http://localhost:3010/dashboard/5-data-quality-hub | Observability & Quarantine |
+| **Jupyter** | [http://localhost:8888](http://localhost:8888) | Data exploration & notebooks |
+| **Spark Master** | [http://localhost:8080](http://localhost:8080) | Streaming processing engine |
+| **Spark Worker** | [http://localhost:8081](http://localhost:8081) | Spark execution logs |
+
+---
 
 ## Best way to read this repo
 
