@@ -14,8 +14,8 @@ $patterns = @(
 
 foreach ($file in $targets) {
     foreach ($pattern in $patterns) {
-        $matches = Select-String -Path $file.FullName -Pattern $pattern
-        if ($matches) {
+        $found_secrets = Select-String -Path $file.FullName -Pattern $pattern
+        if ($found_secrets) {
             Write-Host "POTENTIAL SECRET DETECTED in $($file.Name): $pattern" -ForegroundColor Red
         }
     }

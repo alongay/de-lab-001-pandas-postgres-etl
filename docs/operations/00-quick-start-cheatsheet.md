@@ -53,6 +53,23 @@ Always shut down gracefully to avoid database corruption or orphaned containers.
 
 ---
 
+## 🛡️ Security & Shielding (Vulnerability SOP)
+Maintain a **Zero-Trust** posture for your containers and data.
+
+1.  **Vulnerability Scanning**:
+    ```powershell
+    .\scripts\security\scan_vulnerabilities.ps1
+    ```
+2.  **Secret Scrubbing**:
+    ```powershell
+    .\scripts\security\scan_secrets.ps1
+    ```
+3.  **Patching Policy**:
+    - If a **High/Critical CVE** is detected in a base image (e.g., `postgres`), update the version in `docker-compose.yml` and run `.\task.ps1 rebuild`.
+    - **Never** commit `.env` or plain-text passwords to GitHub.
+
+---
+
 ## 🧹 The "Fresh Start" (Deep Clean)
 If you want to wipe all raw data, database volumes, and logs to start completely from scratch:
 ```powershell

@@ -11,6 +11,7 @@ This document defines the "Day 2" routines required to keep the Data Engineering
 | **Data Quality Drift** | Audit Quarantine growth vs Production | Daily | `scripts/health/check_endpoints.ps1` |
 | **Cost Management** | Audit for non-free-tier resources | Monthly | `scripts/cost/list_paid_resources.sh` |
 | **Security Posture** | Scan for leaked secrets (pre-commit) | Per Commit | `scripts/security/scan_secrets.ps1` |
+| **Vulnerability Mgmt** | Scan Docker images for Critical CVEs | Bi-Weekly | `scripts/security/scan_vulnerabilities.ps1` |
 | **Documentation** | Verify all demos have valid walkthroughs | Weekly | `scripts/docs/verify_docs_present.ps1` |
 
 ---
