@@ -56,4 +56,4 @@ if __name__ == "__main__":
     cli.list_dashboards()
     
     # Example usage: Export the Executive Watchtower (ID 2 usually)
-    # cli.export_dashboard_config(2, "docs/demos/07-bi-visualization/config_backup.json")
+    cli.export_dashboard_config(2, "docs/demos/07-bi-visualization/config_backup.json")

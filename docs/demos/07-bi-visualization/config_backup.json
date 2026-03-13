@@ -1,0 +1,424 @@
+{
+    "description": null,
+    "archived": false,
+    "view_count": 17,
+    "collection_position": null,
+    "dashcards": [
+        {
+            "size_x": 12,
+            "dashboard_tab_id": null,
+            "series": [],
+            "inline_parameters": [],
+            "action_id": null,
+            "collection_authority_level": null,
+            "card": {
+                "cache_invalidated_at": null,
+                "description": null,
+                "archived": false,
+                "view_count": 9,
+                "collection_position": null,
+                "source_card_id": null,
+                "table_id": 9,
+                "result_metadata": [
+                    {
+                        "database_type": "timestamptz",
+                        "semantic_type": null,
+                        "table_id": 9,
+                        "lib/deduplicated-name": "txn_ts",
+                        "lib/original-name": "txn_ts",
+                        "lib/breakout?": true,
+                        "unit": "hour",
+                        "name": "txn_ts",
+                        "lib/source": "source/table-defaults",
+                        "lib/source-column-alias": "txn_ts",
+                        "lib/original-display-name": "Txn Ts",
+                        "source": "breakout",
+                        "field_ref": [
+                            "field",
+                            78,
+                            {
+                                "temporal-unit": "hour"
+                            }
+                        ],
+                        "effective_type": "type/DateTimeWithLocalTZ",
+                        "active": true,
+                        "id": 78,
+                        "lib/desired-column-alias": "txn_ts",
+                        "metabase.lib.field/temporal-unit": "hour",
+                        "position": 6,
+                        "visibility_type": "normal",
+                        "inherited_temporal_unit": "hour",
+                        "display_name": "Txn Ts: Hour",
+                        "fingerprint": {
+                            "global": {
+                                "distinct-count": 5,
+                                "nil%": 0.0
+                            },
+                            "type": {
+                                "type/DateTime": {
+                                    "earliest": "2026-03-01T12:00:00Z",
+                                    "latest": "2026-03-12T22:52:56Z"
+                                }
+                            }
+                        },
+                        "base_type": "type/DateTimeWithLocalTZ"
+                    },
+                    {
+                        "database_type": "numeric",
+                        "semantic_type": null,
+                        "lib/deduplicated-name": "sum",
+                        "lib/original-name": "sum",
+                        "name": "sum",
+                        "lib/source": "source/aggregations",
+                        "lib/source-column-alias": "sum",
+                        "source": "aggregation",
+                        "field_ref": [
+                            "aggregation",
+                            0
+                        ],
+                        "effective_type": "type/Decimal",
+                        "lib/desired-column-alias": "sum",
+                        "display_name": "Sum of Amount",
+                        "fingerprint": {
+                            "global": {
+                                "distinct-count": 2,
+                                "nil%": 0.0
+                            },
+                            "type": {
+                                "type/Number": {
+                                    "min": 14045.0,
+                                    "q1": 14045.0,
+                                    "q3": 97990.45,
+                                    "max": 97990.45,
+                                    "sd": 59358.39694475626,
+                                    "avg": 56017.725
+                                }
+                            }
+                        },
+                        "base_type": "type/Decimal"
+                    }
+                ],
+                "embedding_type": null,
+                "dependency_analysis_version": 0,
+                "initially_published_at": null,
+                "can_write": true,
+                "card_schema": 23,
+                "database_id": 2,
+                "enable_embedding": false,
+                "collection_id": null,
+                "query_type": "query",
+                "download_perms": "full",
+                "name": "Hourly Cash Flow",
+                "document_id": null,
+                "last_used_at": "2026-03-13T04:25:20.728813Z",
+                "type": "question",
+                "query_average_duration": 205,
+                "creator_id": 1,
+                "moderation_reviews": [],
+                "updated_at": "2026-03-13T03:36:39.765999Z",
+                "made_public_by_id": null,
+                "embedding_params": null,
+                "cache_ttl": null,
+                "dataset_query": {
+                    "lib/type": "mbql/query",
+                    "database": 2,
+                    "stages": [
+                        {
+                            "aggregation": [
+                                [
+                                    "sum",
+                                    {
+                                        "lib/uuid": "859054ec-bbfd-4340-a2ab-1ced926d3841"
+                                    },
+                                    [
+                                        "field",
+                                        {
+                                            "effective-type": "type/Decimal",
+                                            "lib/uuid": "cc23a83f-16b8-483b-9cc0-4b3e46a93bdf",
+                                            "base-type": "type/Decimal"
+                                        },
+                                        76
+                                    ]
+                                ]
+                            ],
+                            "source-table": 9,
+                            "lib/type": "mbql.stage/mbql",
+                            "breakout": [
+                                [
+                                    "field",
+                                    {
+                                        "effective-type": "type/DateTimeWithLocalTZ",
+                                        "base-type": "type/DateTimeWithLocalTZ",
+                                        "lib/uuid": "05cc0162-4388-407f-975c-c6bf0d3cc64d",
+                                        "temporal-unit": "hour"
+                                    },
+                                    78
+                                ]
+                            ]
+                        }
+                    ]
+                },
+                "id": 40,
+                "legacy_query": null,
+                "parameter_mappings": [],
+                "display": "line",
+                "archived_directly": false,
+                "entity_id": "Gk5NV4hNBJforStjs3gY6",
+                "collection_preview": true,
+                "visualization_settings": {
+                    "graph.x_axis.scale": "timeseries",
+                    "graph.dimensions": [
+                        "txn_ts"
+                    ],
+                    "graph.metrics": [
+                        "sum"
+                    ]
+                },
+                "metabase_version": "v0.59.2.5 (0d6bac3)",
+                "parameters": [],
+                "dashboard_id": 2,
+                "created_at": "2026-03-13T03:36:39.765999Z",
+                "public_uuid": null
+            },
+            "updated_at": "2026-03-13T03:36:39.876287Z",
+            "col": 0,
+            "id": 37,
+            "parameter_mappings": [],
+            "card_id": 40,
+            "entity_id": "3g7yfxyTsJly8fKicMXEC",
+            "visualization_settings": {},
+            "size_y": 6,
+            "dashboard_id": 2,
+            "created_at": "2026-03-13T03:36:39.876287Z",
+            "row": 0
+        },
+        {
+            "size_x": 12,
+            "dashboard_tab_id": null,
+            "series": [],
+            "inline_parameters": [],
+            "action_id": null,
+            "collection_authority_level": null,
+            "card": {
+                "cache_invalidated_at": null,
+                "description": null,
+                "archived": false,
+                "view_count": 10,
+                "collection_position": null,
+                "source_card_id": null,
+                "table_id": null,
+                "result_metadata": [
+                    {
+                        "database_type": "varchar",
+                        "semantic_type": "type/Category",
+                        "lib/deduplicated-name": "status",
+                        "lib/original-name": "status",
+                        "name": "status",
+                        "lib/source": "source/native",
+                        "lib/source-column-alias": "status",
+                        "source": "native",
+                        "field_ref": [
+                            "field",
+                            "status",
+                            {
+                                "base-type": "type/Text"
+                            }
+                        ],
+                        "effective_type": "type/Text",
+                        "lib/desired-column-alias": "status",
+                        "display_name": "status",
+                        "fingerprint": {
+                            "global": {
+                                "distinct-count": 3,
+                                "nil%": 0.0
+                            },
+                            "type": {
+                                "type/Text": {
+                                    "percent-json": 0.0,
+                                    "percent-url": 0.0,
+                                    "percent-email": 0.0,
+                                    "percent-state": 0.0,
+                                    "average-length": 8.666666666666666
+                                }
+                            }
+                        },
+                        "base_type": "type/Text"
+                    },
+                    {
+                        "database_type": "int8",
+                        "semantic_type": "type/Quantity",
+                        "lib/deduplicated-name": "count",
+                        "lib/original-name": "count",
+                        "name": "count",
+                        "lib/source": "source/native",
+                        "lib/source-column-alias": "count",
+                        "source": "native",
+                        "field_ref": [
+                            "field",
+                            "count",
+                            {
+                                "base-type": "type/BigInteger"
+                            }
+                        ],
+                        "effective_type": "type/BigInteger",
+                        "lib/desired-column-alias": "count",
+                        "display_name": "count",
+                        "fingerprint": {
+                            "global": {
+                                "distinct-count": 3,
+                                "nil%": 0.0
+                            },
+                            "type": {
+                                "type/Number": {
+                                    "min": 1.0,
+                                    "q1": 1.5,
+                                    "q3": 79.5,
+                                    "max": 105.0,
+                                    "sd": 59.475485145842505,
+                                    "avg": 36.333333333333336
+                                }
+                            }
+                        },
+                        "base_type": "type/BigInteger"
+                    }
+                ],
+                "embedding_type": null,
+                "dependency_analysis_version": 0,
+                "initially_published_at": null,
+                "can_write": true,
+                "card_schema": 23,
+                "database_id": 2,
+                "enable_embedding": false,
+                "collection_id": null,
+                "query_type": "native",
+                "download_perms": "full",
+                "name": "Payment Status Distribution",
+                "document_id": null,
+                "last_used_at": "2026-03-13T04:25:28.541134Z",
+                "type": "question",
+                "query_average_duration": 72,
+                "creator_id": 1,
+                "moderation_reviews": [],
+                "updated_at": "2026-03-13T03:41:33.931576Z",
+                "made_public_by_id": null,
+                "embedding_params": null,
+                "cache_ttl": null,
+                "dataset_query": {
+                    "lib/type": "mbql/query",
+                    "database": 2,
+                    "stages": [
+                        {
+                            "lib/type": "mbql.stage/native",
+                            "native": "SELECT status, COUNT(*) as count FROM raw_payments GROUP BY 1;"
+                        }
+                    ]
+                },
+                "id": 41,
+                "legacy_query": null,
+                "parameter_mappings": [],
+                "display": "pie",
+                "archived_directly": false,
+                "entity_id": "UGhvJWNfuMxU5JkfH6RNh",
+                "collection_preview": true,
+                "visualization_settings": {},
+                "metabase_version": "v0.59.2.5 (0d6bac3)",
+                "parameters": [],
+                "dashboard_id": null,
+                "created_at": "2026-03-13T03:41:33.931576Z",
+                "public_uuid": null
+            },
+            "updated_at": "2026-03-13T03:42:29.095109Z",
+            "col": 12,
+            "id": 38,
+            "parameter_mappings": [],
+            "card_id": 41,
+            "entity_id": "wM1gEyygPTazftqULYxqw",
+            "visualization_settings": {},
+            "size_y": 8,
+            "dashboard_id": 2,
+            "created_at": "2026-03-13T03:42:29.095109Z",
+            "row": 0
+        },
+        {
+            "size_x": 12,
+            "dashboard_tab_id": null,
+            "series": [],
+            "inline_parameters": [],
+            "action_id": null,
+            "collection_authority_level": null,
+            "card": {
+                "query_average_duration": null,
+                "download_perms": "none"
+            },
+            "updated_at": "2026-03-13T04:21:55.989352Z",
+            "col": 0,
+            "id": 45,
+            "parameter_mappings": [],
+            "card_id": null,
+            "entity_id": "7-wr4asRhw1Yxr02QosPU",
+            "visualization_settings": {
+                "virtual_card": {
+                    "name": null,
+                    "display": "text",
+                    "visualization_settings": {},
+                    "archived": false
+                },
+                "text": "### Detailed Insights\n- [Talent Insights](/dashboard/3-talent-insights)\n- [IoT Pulse](/dashboard/4-iot-pulse)\n- [Data Quality Hub](/dashboard/5-data-quality-hub)"
+            },
+            "size_y": 3,
+            "dashboard_id": 2,
+            "created_at": "2026-03-13T04:03:26.499757Z",
+            "row": 6
+        }
+    ],
+    "embedding_type": null,
+    "dependency_analysis_version": 0,
+    "initially_published_at": null,
+    "can_write": true,
+    "can_set_cache_policy": true,
+    "tabs": [],
+    "enable_embedding": false,
+    "collection_id": null,
+    "show_in_getting_started": false,
+    "name": "Executive Watchtower",
+    "is_remote_synced": false,
+    "width": "fixed",
+    "caveats": null,
+    "collection_authority_level": null,
+    "creator_id": 1,
+    "can_restore": false,
+    "moderation_reviews": [],
+    "updated_at": "2026-03-13T03:34:31.633844Z",
+    "made_public_by_id": null,
+    "embedding_params": null,
+    "cache_ttl": null,
+    "last_used_param_values": {},
+    "id": 2,
+    "last_viewed_at": "2026-03-13T04:25:20.638583Z",
+    "position": null,
+    "archived_directly": false,
+    "entity_id": "9zrCPM4JlSnhkOAJCEZsK",
+    "param_fields": {},
+    "last-edit-info": {
+        "id": 1,
+        "email": "admin@pde.lab",
+        "first_name": "Admin",
+        "last_name": "PDE Lab",
+        "timestamp": "2026-03-13T04:21:56.055122Z"
+    },
+    "collection": {
+        "metabase.collections.models.collection.root/is-root?": true,
+        "authority_level": null,
+        "name": "Our analytics",
+        "is_personal": false,
+        "id": "root",
+        "is_remote_synced": false,
+        "can_write": true
+    },
+    "parameters": [],
+    "auto_apply_filters": true,
+    "created_at": "2026-03-13T03:34:31.633844Z",
+    "public_uuid": null,
+    "points_of_interest": null,
+    "can_delete": false
+}
