@@ -1,5 +1,5 @@
 """
-src/db.py
+src/core/db.py
 
 Database connectivity utilities for the DE lab.
 
