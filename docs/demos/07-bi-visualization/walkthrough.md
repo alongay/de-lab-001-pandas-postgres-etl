@@ -86,4 +86,21 @@ Initially, only 2 tables were visible. Through debugging the "Last Mile" of prod
 > **Interview Talking Point**: "I didn't just build dashboards; I built a multi-domain observability suite. When data didn't show up, I used the Quarantine tables to debug the ingestion logic, proving that the Great Expectations quality gates were working as intended."
 
 ---
+
+### 💹 Advanced Analytics & Window Functions
+To demonstrate "Data Scientist" level mastery, we've provided [**Advanced SQL Logic**](sql_catalog.md) for deeper insights:
+*   **Revenue Growth %**: Tracks daily performance trends using `LAG()` window functions.
+*   **Applicant Aging**: Calculates real-time cycle time to identify bottlenecks in hiring.
+*   **Sensor Smoothing**: Filters high-frequency IoT noise via moving averages for cleaner dashboards.
+
+---
+
+### ⌨️ BI-as-Code: The Metabase API CLI
+In senior-level production environments, all infrastructure is managed programmatically.
+*   **[BI CLI Wrapper](../../scripts/metabase/metabase_api_cli.py)**: A Python implementation of the Metabase REST API.
+*   **Capabilities**: Programmatically list dashboards, export configurations to JSON, and sync SQL logic from version control to the production server.
+*   **Interview Power Point**: "I transitioned our BI layer into **BI-as-Code**, using a custom Python SDK to ensure our visualizations are version-controlled, reproducible, and decoupled from manual UI clicks."
+
+---
+
 **Congratulations!** You have completed the full Loop of Production Data Engineering across multiple distinct data domains.
