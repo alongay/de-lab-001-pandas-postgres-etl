@@ -16,6 +16,14 @@ To master the BI layer, follow these documents in order:
 
 ---
 
+### 🛠️ BI Engineering Assets
+To move beyond "point-and-click" BI, we have formalized our visualization logic:
+
+*   [**SQL Catalog**](sql_catalog.md) — Version-controlled source of truth for all dashboard queries.
+*   [**Connectivity Script**](../../scripts/metabase/verify_bi_connectivity.py) — Automated verification of the Warehouse-to-Metabase bridge.
+
+---
+
 ### 🏗️ BI Architecture
 - **Tool**: Metabase (Dockerized on Port 3010).
 - **Core Warehouse**: PostgreSQL (`de_workshop`).
