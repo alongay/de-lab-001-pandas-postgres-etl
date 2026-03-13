@@ -1,40 +1,62 @@
-# System Architecture: Fraud-Ready Payments ETL
+# 🏙️ Global Platform Architecture
 
-This document outlines the high-level architecture of the **de-lab-001-pandas-postgres-etl** repository.
+This document outlines the high-level architecture of the **Enterprise Data Engineering Demo Platform**.
 
 > [!IMPORTANT]
-> Our guiding philosophy is **Container-First Parity**. By enforcing runtime environments strictly within Docker Compose, a developer's local laptop behaves exactly identically to our production servers and our CI testing suites.
+> Our guiding philosophy is **Idempotent Hybrid Orchestration**. By blending isolated domain-specific containers with a centralized Airflow control plane, we achieve a balance of **development speed** and **production-grade resilience**.
 
 ---
 
-## 1. Core Platform Components
+## 1. Multi-Domain Persistence Layers
 
-### Isolated Domain Stacks (Disposable)
-- **What they are**: Domain-specific Docker Compose files (e.g., `docker-compose.payments.yml`) that encapsulate the entire environment for a single demo.
-- **How they work**: Invoked via `.\task.ps1 demo-<domain>`.
-- **Why we do this**: **Infrastructure Symmetrization**. Each domain (Payments, IoT, HR) owns its own persistence layer and networking, preventing port collisions and cross-domain pollution.
+The platform implements a **Domain-Oriented Metadata Architecture**:
 
-### Core Lab Stack (Persistent)
-- **What it is**: The `docker-compose.yml` file providing shared development services.
-- **Components**: `pde_postgres_15` (Shared SQL playground) and `pde_jupyter_lab` (Exploration UI).
-- **Service Binding**: Jupyter is bound to `127.0.0.1:8888` and bind-mounts the local `notebooks/` and `src/` directories.
-- **Why we do this**: Allows engineers to profile chaotic inbound feeds safely before cementing the logic into the strict ETL runners.
+### 💳 Finance (Payments)
+- **Engine**: PostgreSQL
+- **Pattern**: Happy Path / Chaos Injection / Quarantine.
+- **Goal**: High-integrity validation with **Great Expectations**.
 
----
+### ⚕️ HR (Talent Compliance)
+- **Engine**: PostgreSQL (Isolated Container)
+- **Pattern**: PII Redaction & Audit Trail.
+- **Goal**: Demonstrating data sovereignty and regulatory compliance (GDPR/SOC2 style).
 
-## 2. Security & Network Isolation
-
-- **Internal Routing**: The ETL container talks to the database using the Docker internal DNS name `postgres`.
-- **Localhost Hardening**: Postgres and Jupyter ports are strictly bound to `127.0.0.1`.
-- **No Hardcoded Credentials**: Connection tokens reside solely in the `.env` file.
+### 🛰️ IoT (Streaming Telemetry)
+- **Engine**: **Delta Lake** (Medallion: Bronze -> Silver)
+- **Pattern**: Spark Structured Streaming + Kafka.
+- **Goal**: Real-time anomaly routing and high-velocity storage.
 
 ---
 
-## 3. The Functional Data Flow
+## 2. Programmable Visibility Layer (BI-as-Code)
 
-When executing the pipeline, data flows linearly through decoupled modules:
+We treat Business Intelligence as a **First-Class Engineering Asset**:
+- **Engine**: Metabase
+- **GitOps Integration**: Dashboards are version-controlled via a custom **Python CLI Wrapper** over the Metabase API.
+- **Zero-Manual-Setup**: Configurations are synchronized to ensure environment parity (Local vs Staging).
 
-1. **Extract**: Reaches out to the configured `INGEST_SOURCE` (Mock HTTP or Raw CSV).
-2. **Transform**: Implements static typing, numeric precision with **decimal.Decimal**, and record hashing.
-3. **Quality Gate**: Engages **Great Expectations**. If ANY payload violates strict logic, the pipeline crashes non-zero to protect the Warehouse.
-4. **Load**: Uses an aggressive **Staging-First UPSERT** pattern. This implicitly guarantees **idempotency**.
+---
+
+## 3. The Functional Data Flow (Senior Guardrails)
+
+All data moving through the platform must pass through the **Senior Reliability Filter**:
+
+1.  **Extract**: Source-agnostic connectors (Kafka, Mock HTTP, CSV, Parquet).
+2.  **Transform**: Explicit schema enforcement and deterministic hashing.
+3.  **Governance Gate**:
+    - **Physical Rules**: Catching 500°C temperatures (Physics Quality Gates).
+    - **Logic Rules**: Catching negative payment amounts.
+4.  **Anomaly Routing**: Data that fails the gate is never lost; it is routed to a **Quarantine Delta Table** or Postgres Schema for later auditing.
+5.  **Idempotent Load**: All write operations use **UPSERT** or **OVERWRITE** patterns to ensure the pipeline is safe to re-run after failure.
+
+---
+
+## 🛡️ Zero-Trust Security Posture
+
+- **Shift-Left Security**: Secret scanning integrated into the `platform-up` command.
+- **Image Hardening**: Automated CVE scanning for all Docker images.
+- **Network Isolation**: All services communicate via internal Docker bridge networks with strictly mapped exports.
+
+---
+
+**Status: ARCHITECTURE CERTIFIED** 🚀🏙️💎🏁
